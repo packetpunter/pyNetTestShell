@@ -1,5 +1,12 @@
 from cmd import Cmd
 import Config
+import pandas as pd
+import os
+from datetime import datetime
+import logging
+import subprocess
+import speedtest
+from io import StringIO
 
 class nms_interactive(Cmd):
     prompt = Config._PROGRAM_SLUG + "> "
@@ -9,8 +16,6 @@ class nms_interactive(Cmd):
                     Config._PROGRAM_NAME,
                     Config._VERSION)
     _TARGETS = []
-    from datetime import datetime
-    import os
     _cwd = os.getcwd()
     _now = datetime.now()
     _fday = _now.strftime("%Y/%m/%d")
@@ -21,7 +26,6 @@ class nms_interactive(Cmd):
     
     _LOGFILE = _path + Config._PROGRAM_SLUG + "_sessionat_" + _ftime + ".nmsLog"
     
-    import logging
     logger = logging.getLogger(Config._PROGRAM_SLUG)
     logger.setLevel(logging.DEBUG)
 
@@ -110,17 +114,18 @@ class nms_interactive(Cmd):
 
     def _speedtest(self):
         ''' run speedtest '''
-        import speedtest
         tester = speedtest.Speedtest()
         server = tester.get_best_server()
         tester.download()
         tester.upload()
         results_url = tester.results.share()
         results = tester.results.dict()
-        
-        self.logger.info("Speedtest results: {} mbps Down, {} mbps Up".format(
-            round(results['download']/1024/1024, 0), 
-            round(results['upload']/1024/1024, 0)))
+        rstr = "Speedtest results: {}mbps Down, {}mbps Up, {}ms Latency".format(
+                round(results['download']/1024/1024, 0),
+                round(results['upload']/1024/1024,0),
+                round(results['ping'],1))
+        self.logger.info(rstr)
+        print(rstr)
         self.logger.info("Speedest Latency: {}ms".format(
             round(results['ping']), 1))
         self.logger.info("Speedtest URL: {}".format(results_url))
@@ -140,12 +145,9 @@ class nms_interactive(Cmd):
             the_host = host.strip()
             # TODO: add path check for mtr, bolt on traceroute as alternative
             print("Traceroute invoked for {}".format(the_host))
-            import subprocess
             p_res = subprocess.run(
                     ["mtr","--no-dns","--report-wide","-c","10","--csv", the_host], 
                     capture_output=True)
-            import pandas as pd
-            from io import StringIO
             _t = StringIO(p_res.stdout.decode()) 
             data = pd.read_csv(_t)
             # delete extraneous data
