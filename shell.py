@@ -99,7 +99,7 @@ class nms_interactive(Cmd):
             case "all":
                 self._speedtest()
                 self._mtr()
-                print("Combination test completed. Results logged."\
+                print("Combination test completed. Results logged. "\
                         "Additional testing in this session will be appended.")
             case other:
                 self.logger.error("Unable to parse test type.")
@@ -146,10 +146,11 @@ class nms_interactive(Cmd):
             self.logger.info("Traceroute: Info for Host {}".format(host))
             #log the result hop by hop
             for i in data.index:
-                self.logger.info("Traceroute: Hop# {} Host {} Loss% {}".format(
+                self.logger.info("Traceroute: Hop# {} IP {} Loss {}% Avg Resp {}ms".format(
                     data['Hop'][i],
                     data['Ip'][i],
-                    data['Loss%'][i]
+                    data['Loss%'][i],
+                    data['Avg'][i]
                     )
                 )
         
