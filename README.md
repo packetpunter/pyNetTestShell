@@ -7,10 +7,14 @@ Please have mtr installed and in the path of the user running the script.
 [Installing Ubuntu on WSL2 on Windows 10](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview)
 
 ## Usage
+First preparation
 ```bash
 python3 -m pip install venv
 python3 -m venv venv/
 source venv/bin/activate
 pip install -r requirements.txt
+```
+Running thereafter
+```bash
 python shell.py
 ```
