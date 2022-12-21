@@ -23,7 +23,7 @@ class nms_interactive(Cmd):
     
     import logging
     logger = logging.getLogger(Config._PROGRAM_SLUG)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     logfileHandle = logging.FileHandler(_LOGFILE)
     logfileHandle.setLevel(logging.INFO)
@@ -38,20 +38,64 @@ class nms_interactive(Cmd):
         print("Exiting per user..")
         return True
 
-    def do_run_speedtest(self, user_input):
-        ''' run speedtest against current targets '''
-        self.print_ignored(user_input)
-        self._run("speed")
+    def do_run(self, verbage):
+        ''' execute command based off verbage '''
+        actions = verbage.split()
+        if(len(actions) == 0):
+            self.logger.error("do_run: no actions specified")
+            return
+        action = actions.pop(0) #take first of user's verbs
+        match action:
+            case 'all':
+                self._speedtest()
+                self._mtr()
+            case 'speed':
+                self._speedtest()
+            case 'route':
+                self._mtr()
+    
+    def do_set(self, user_input):
+        ''' set for properties target,targets '''
+        actions = user_input.split()
+        if(len(actions) == 0):
+            self.logger.error("do_set: no actions specified")
+            print("No actions specified..")
+            return
+        action = actions.pop(0)
+        match action:
+            case 'target'|'targets':
+                msg = "Targets cleared and reset via set"
+                self.logger.debug(msg)
+                print(msg)
+                _targs = []
+                for t in actions:
+                    print("adding target {}".format(t))
+                    _targs.append(t)
+                self._TARGETS = _targs.copy()
+                msg = "set: TARGETS len: {}".format(len(self._TARGETS))
+                self.logger.info(msg)
+            case default:
+                msg = "Attempted to set unknown property {} to val {}".format(action, actions)
+                self.logger.debug(msg)
+                print(msg)
 
-    def do_run_all(self, user_input):
-        ''' run all tests against the current targets '''
-        self.print_ignored(user_input)
-        self._run("all")
+    def do_show(self, user_input):
+        ''' wrap around get for properties target, targets, lofile'''
+        self.do_get(user_input)
 
-    def do_run_route(self, user_input):
-        ''' run only a traceroute '''
-        self.print_ignored(user_input)
-        self._run("route")
+    def do_get(self, user_input):
+        ''' get properties: target, targets, logfile'''
+        requested_properties = user_input.split()
+        for p in requested_properties:
+            match p:
+                case 'target'|'targets':
+                    print(self._TARGETS)
+                case 'logfile':
+                    print(self._LOGFILE)
+                case default:
+                    msg = "Can't get unknown property {}".format(p)
+                    self.logger.debug(msg)
+                    print(msg)
 
     def do_open_targets(self, user_input):
         ''' open targets file and load that into memory'''
@@ -60,49 +104,9 @@ class nms_interactive(Cmd):
                 if(len(entry.strip()) > 0): self._TARGETS.append(entry)
         print("Found {} in your targets file!".format(len(self._TARGETS)))
 
-    def do_set_target(self, user_input):
-        ''' set single target '''
-        if(len(self._TARGETS) > 0):
-            print("Targets already set. Run clear_targets and try again")
-        else:
-            self._TARGETS.append(user_input)
-
     def do_clear_targets(self, user_input):
         ''' clear target list '''
-        self.print_ignored(user_input)
         self._TARGETS.clear()
-
-    def do_get_targets(self, user_input):
-        ''' get list of targets '''
-        self.print_ignored(user_input)
-        for t in self._TARGETS:
-            print("Target: {}".format(t))
-    
-    def do_get_logfile(self, user_input):
-        ''' get location of logfile, if set '''
-        self.print_ignored(user_input)
-        if(self._LOGFILE):
-            print("Logfile: {}".format(self._LOGFILE))
-        else:
-            print("No logfile set")
-
-    def print_ignored(self, text):
-        if(len(text) > 0):
-            print("Ignored input: {}".format(text))
-
-    def _run(self, test_type):
-        match test_type:
-            case "speed":
-                self._speedtest()
-            case "route":
-                self._mtr()
-            case "all":
-                self._speedtest()
-                self._mtr()
-                print("Combination test completed. Results logged. "\
-                        "Additional testing in this session will be appended.")
-            case other:
-                self.logger.error("Unable to parse test type.")
 
     def _speedtest(self):
         ''' run speedtest '''
@@ -127,6 +131,11 @@ class nms_interactive(Cmd):
 
     def _mtr(self):
         ''' run mtr '''
+        if(len(self._TARGETS) == 0):
+            self.logger.error("traceroute invoked without targets!!"\
+            "try set_target, or specify in run")
+            print("Traceroute had no targets.. skipping")
+            return
         for host in self._TARGETS:
             the_host = host.strip()
             # TODO: add path check for mtr, bolt on traceroute as alternative
