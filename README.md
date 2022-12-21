@@ -16,5 +16,6 @@ pip install -r requirements.txt
 ```
 Running thereafter
 ```bash
+source venv/bin/activate
 python shell.py
 ```
