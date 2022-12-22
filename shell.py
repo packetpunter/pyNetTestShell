@@ -50,7 +50,7 @@ class nms_interactive(Cmd):
         return True
 
     def do_run(self, verbage):
-        ''' execute command based off verbage '''
+        ''' execute tests based off verbs: all, speed, route/routes, ping/pings \n e.g run ping '''
         actions = verbage.split()
         if(len(actions) == 0):
             self.logger.error("do_run: no actions specified")
@@ -59,11 +59,14 @@ class nms_interactive(Cmd):
         match action:
             case 'all':
                 self._speedtest()
+                self._pingonce()
                 self._mtr()
             case 'speed':
                 self._speedtest()
-            case 'route':
+            case 'route'|'routes':
                 self._mtr()
+            case 'ping'|'pings':
+                self._pingonce()
     
     def do_set(self, user_input):
         ''' set for properties target,targets '''
@@ -143,11 +146,7 @@ class nms_interactive(Cmd):
 
     def _mtr(self):
         ''' run mtr '''
-        if(len(self._TARGETS) == 0):
-            self.logger.error("traceroute invoked without targets!!"\
-            "try set_target, or specify in run")
-            print("Traceroute had no targets.. skipping")
-            return
+        self._ensure_targets()
         for host in self._TARGETS:
             the_host = host.strip()
             # TODO: add path check for mtr, bolt on traceroute as alternative
@@ -174,6 +173,30 @@ class nms_interactive(Cmd):
         
         print("Traceroute completed")
 
+    def _pingonce(self):
+        ''' run ping once against targets '''
+        self._ensure_targets()
+        for host in self._TARGETS:
+            the_host = host.strip()
+            msg = "Sending 10 pings to {}".format(the_host)
+            self.logger.info(msg)
+            print(msg)
+            ping_result = subprocess.run(
+                    ["ping","-c","10","-i","1","-n","-q", the_host],
+                    capture_output=True)
+            _y = StringIO(ping_result.stdout.decode())
+            _x = _y.getvalue().split("\n")
+            msg = "PING: {}\nPING: {}".format(_x[-3], _x[-2])
+            self.logger.info(msg)
+            print(msg)
 
+    
+    def _ensure_targets(self):
+        if(len(self._TARGETS) == 0):
+            self.logger.error("Targets file is empty!")
+            self.logger.error("ensure_targets: adding 1.1.1.1")
+            self._TARGETS.append("1.1.1.1")
+        else:
+            self.logger.info("ensure_targets: valid targets exist")
 if __name__ == '__main__':
     nms_interactive().cmdloop()
