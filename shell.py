@@ -7,6 +7,7 @@ import logging
 import subprocess
 import speedtest
 from io import StringIO
+from time import sleep
 
 class nms_interactive(Cmd):
     prompt = Config._PROGRAM_SLUG + "> "
@@ -49,8 +50,35 @@ class nms_interactive(Cmd):
         print("Exiting per user..")
         return True
 
+    def _sleep_10(self):
+        ''' invoke 10sec sleep '''
+        msg = "Sleeping for 10 seconds"
+        self.logger.info(msg)
+        print(msg)
+        sleep(10)
+
+    def _sleep_60(self):
+        ''' invoke 60 sec sleep '''
+        msg = "Sleeping for 1 minute"
+        self.logger.info(msg)
+        print(msg)
+        sleep(60)
+
+    def _sleep_5m(self):
+        ''' invoke 5min sleep '''
+        msg = "Sleeping for 5 mins"
+        self.logger.info(msg)
+        print(msg)
+        sleep(300)
+        
     def do_run(self, verbage):
-        ''' execute tests based off verbs: all, speed, route/routes, ping/pings \n e.g run ping '''
+        ''' execute tests based off verbs'''\
+        '''\n e.g run ping \n'''\
+        ''' You can run these:\n'''\
+        ''' speed, route/routes, ping/pings,\n'''\
+        ''' sleep5m/wait5m, sleep10/wait10,\n'''\
+        ''' sleep60/wait60/sleep1m/wait1m\n'''
+
         actions = verbage.split()
         if(len(actions) == 0):
             self.logger.error("do_run: no actions specified")
@@ -69,6 +97,12 @@ class nms_interactive(Cmd):
                     self._mtr()
                 case 'ping'|'pings':
                     self._pingonce()
+                case 'sleep5m'|'sleep_5m'|'wait5m':
+                    self._sleep_5m()
+                case 'sleep10'|'wait10':
+                    self._sleep_10()
+                case 'sleep60'|'wait60'|'sleep1m'|'wait1m':
+                    self._sleep_60()
 
     
     def do_set(self, user_input):
