@@ -37,6 +37,13 @@ class nms_interactive(Cmd):
 
     logger.addHandler(logfileHandle)
 
+    def emptyline(self):
+        ''' clear last line so it doesnt repeat on enter '''
+        ''' credit: https://stackoverflow.com/questions/16479029/python-cmd-execute-last-command-while-prompt-and-empty-line'''
+        if self.lastcmd:
+            self.lastcmd = ""
+            return self.onecmd("\n")
+
     def do_exit(self, user_input):
         ''' exit '''
         print("Exiting per user..")
@@ -157,13 +164,13 @@ class nms_interactive(Cmd):
             self.logger.info("Traceroute: Info for Host {}".format(host))
             #log the result hop by hop
             for i in data.index:
-                self.logger.info("Traceroute: Hop# {} IP {} Loss {}% Avg Resp {}ms".format(
+                msg="Traceroute: Hop# {} IP {} Loss {}% Avg Resp {}ms".format(
                     data['Hop'][i],
                     data['Ip'][i],
                     data['Loss%'][i],
-                    data['Avg'][i]
-                    )
-                )
+                    data['Avg'][i])
+                self.logger.info(msg)
+                print(msg)
         
         print("Traceroute completed")
 
