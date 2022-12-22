@@ -55,18 +55,21 @@ class nms_interactive(Cmd):
         if(len(actions) == 0):
             self.logger.error("do_run: no actions specified")
             return
-        action = actions.pop(0) #take first of user's verbs
-        match action:
-            case 'all':
-                self._speedtest()
-                self._pingonce()
-                self._mtr()
-            case 'speed':
-                self._speedtest()
-            case 'route'|'routes':
-                self._mtr()
-            case 'ping'|'pings':
-                self._pingonce()
+        if "all" in actions:
+            print(" 'all' test selected. Running all tests once only")
+            self._speedtest()
+            self._pingonce()
+            self._mtr()
+            actions = []
+        for action in actions: #loop for multiple run commands, e.g. 'run ping route'
+            match action:
+                case 'speed':
+                    self._speedtest()
+                case 'route'|'routes':
+                    self._mtr()
+                case 'ping'|'pings':
+                    self._pingonce()
+
     
     def do_set(self, user_input):
         ''' set for properties target,targets '''
