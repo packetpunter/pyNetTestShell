@@ -38,6 +38,11 @@ class nms_interactive(Cmd):
 
     logger.addHandler(logfileHandle)
 
+    def _logprint(self, msg):
+        ''' print to console and log '''
+        print(msg)
+        self.logger.info(msg)
+
     def emptyline(self):
         ''' clear last line so it doesnt repeat on enter '''
         ''' credit: https://stackoverflow.com/questions/16479029/python-cmd-execute-last-command-while-prompt-and-empty-line'''
@@ -47,37 +52,42 @@ class nms_interactive(Cmd):
 
     def do_exit(self, user_input):
         ''' exit '''
-        print("Exiting per user..")
+        self._logprint(" *** Goodbye ***!")
         return True
 
     def _sleep_10(self):
         ''' invoke 10sec sleep '''
-        msg = "Sleeping for 10 seconds"
-        self.logger.info(msg)
-        print(msg)
+        self._logprint("Sleeping for 10 seconds")
         sleep(10)
 
     def _sleep_60(self):
         ''' invoke 60 sec sleep '''
-        msg = "Sleeping for 1 minute"
-        self.logger.info(msg)
-        print(msg)
+        self._logprint("Sleeping for 1 minute")
         sleep(60)
 
     def _sleep_5m(self):
         ''' invoke 5min sleep '''
-        msg = "Sleeping for 5 mins"
-        self.logger.info(msg)
-        print(msg)
+        self._logprint("Sleeping for 5 mins")
         sleep(300)
-        
+
+    def _sleep_1h(self):
+        ''' invoke 1hr sleep '''
+        self._logprint("Sleeping for 1h")
+        sleep(3600)
+
+    def _sleep_30m(self):
+        ''' invoke 30m sleep '''
+        self._logprint("Sleeping for 30m")
+        sleep(1800)
+
     def do_run(self, verbage):
         ''' execute tests based off verbs'''\
         '''\n e.g run ping \n'''\
         ''' You can run these:\n'''\
         ''' speed, route/routes, ping/pings,\n'''\
         ''' sleep5m/wait5m, sleep10/wait10,\n'''\
-        ''' sleep60/wait60/sleep1m/wait1m\n'''
+        ''' sleep60/wait60/sleep1m/wait1m\n'''\
+        ''' sleep1h/wait1h, sleep30m/wait30m'''
 
         actions = verbage.split()
         if(len(actions) == 0):
@@ -103,33 +113,30 @@ class nms_interactive(Cmd):
                     self._sleep_10()
                 case 'sleep60'|'wait60'|'sleep1m'|'wait1m':
                     self._sleep_60()
-
+                case 'sleep1h'|'wait1h':
+                    self._sleep_1h()
+                case 'sleep30m'|'wait30m':
+                    self._sleep_30m()
     
     def do_set(self, user_input):
         ''' set for properties target,targets '''
         actions = user_input.split()
         if(len(actions) == 0):
-            self.logger.error("do_set: no actions specified")
-            print("No actions specified..")
+            self.logprint("do_set: no actions specified")
             return
         action = actions.pop(0)
         match action:
             case 'target'|'targets':
-                msg = "Targets cleared and reset via set"
-                self.logger.debug(msg)
-                print(msg)
+                self._logprint("Targets cleared and reset via set")
                 _targs = []
                 for t in actions:
-                    print("adding target {}".format(t))
                     _targs.append(t)
                 self._TARGETS = _targs.copy()
-                msg = "set: TARGETS len: {}".format(len(self._TARGETS))
-                self.logger.info(msg)
-            case default:
-                msg = "Attempted to set unknown property {} to val {}".format(action, actions)
-                self.logger.debug(msg)
-                print(msg)
+                self.logger.debug("set: TARGETS len: {}".format(len(self._TARGETS)))
 
+            case default:
+                self._logprint("Attempted to set unknown property {} to val {}".format(action, actions))
+            
     def do_show(self, user_input):
         ''' wrap around get for properties target, targets, lofile'''
         self.do_get(user_input)
@@ -144,16 +151,14 @@ class nms_interactive(Cmd):
                 case 'logfile':
                     print(self._LOGFILE)
                 case default:
-                    msg = "Can't get unknown property {}".format(p)
-                    self.logger.debug(msg)
-                    print(msg)
+                    self._logprint("Can't get unknown property {}".format(p))
 
     def do_open_targets(self, user_input):
         ''' open targets file and load that into memory'''
         with open(user_input, 'r') as f:
             for entry in f:
                 if(len(entry.strip()) > 0): self._TARGETS.append(entry)
-        print("Found {} in your targets file!".format(len(self._TARGETS)))
+        self._logprint("Found {} in your targets file!".format(len(self._TARGETS)))
 
     def do_clear_targets(self, user_input):
         ''' clear target list '''
@@ -171,11 +176,11 @@ class nms_interactive(Cmd):
                 round(results['download']/1024/1024, 0),
                 round(results['upload']/1024/1024,0),
                 round(results['ping'],1))
-        self.logger.info(rstr)
-        print(rstr)
+        self._logprint(rstr)
+        # additional info to logfile
         self.logger.info("Speedest Latency: {}ms".format(
             round(results['ping']), 1))
-        self.logger.info("Speedtest URL: {}".format(results_url))
+        self._logprint("Speedtest URL: {}".format(results_url))
         self.logger.info("Speedtest Server Location: {}".format(results['server']['name']))
         self.logger.info("Speedtest Server Host {} by {}".format(
             results['server']['host'], results['server']['sponsor']))
@@ -187,7 +192,7 @@ class nms_interactive(Cmd):
         for host in self._TARGETS:
             the_host = host.strip()
             # TODO: add path check for mtr, bolt on traceroute as alternative
-            print("Traceroute invoked for {}".format(the_host))
+            self._logprint("Traceroute invoked for {}".format(the_host))
             p_res = subprocess.run(
                     ["mtr","--no-dns","--report-wide","-c","10","--csv", the_host], 
                     capture_output=True)
@@ -197,7 +202,6 @@ class nms_interactive(Cmd):
             del data['Mtr_Version']
             del data['Start_Time']
             data = data.iloc[:, :-1]
-            self.logger.info("Traceroute: Info for Host {}".format(host))
             #log the result hop by hop
             for i in data.index:
                 msg="Traceroute: Hop# {} IP {} Loss {}% Avg Resp {}ms".format(
@@ -205,8 +209,7 @@ class nms_interactive(Cmd):
                     data['Ip'][i],
                     data['Loss%'][i],
                     data['Avg'][i])
-                self.logger.info(msg)
-                print(msg)
+                self._logprint(msg)
         
         print("Traceroute completed")
 
@@ -215,24 +218,24 @@ class nms_interactive(Cmd):
         self._ensure_targets()
         for host in self._TARGETS:
             the_host = host.strip()
-            msg = "Sending 10 pings to {}".format(the_host)
-            self.logger.info(msg)
-            print(msg)
+            self._logprint("Sending 10 pings to {}".format(the_host))
             ping_result = subprocess.run(
                     ["ping","-c","10","-i","1","-n","-q", the_host],
                     capture_output=True)
             _y = StringIO(ping_result.stdout.decode())
             _x = _y.getvalue().split("\n")
-            msg = "PING: {}\nPING: {}".format(_x[-3], _x[-2])
-            self.logger.info(msg)
-            print(msg)
+            print("PING: {}\nPING: {}".format(_x[-3], _x[-2]))
+            # info split into individual log lines
+            self.logger.info("PING1:{}".format(_x[-3]))
+            self.logger.info("PING2:{}".format(_x[-2]))
 
     
     def _ensure_targets(self):
         if(len(self._TARGETS) == 0):
             self.logger.error("Targets file is empty!")
-            self.logger.error("ensure_targets: adding 1.1.1.1")
-            self._TARGETS.append("1.1.1.1")
+            for host in Config._DEFAULT_HOSTS:
+                self.logger.error("ensure_targets: adding {}".format(host))
+                self._TARGETS.append(host)
         else:
             self.logger.info("ensure_targets: valid targets exist")
 if __name__ == '__main__':
