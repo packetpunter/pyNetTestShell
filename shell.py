@@ -1,21 +1,25 @@
-from cmd import Cmd
-import Config
 import pandas as pd
 import os
-from datetime import datetime
 import logging
 import subprocess
 import speedtest
+
+from cmd import Cmd
 from io import StringIO
 from time import sleep
+from yaml import safe_load
+from datetime import datetime
+
+with open('Config.yml', 'r') as config_file:
+    _CONFIG = safe_load(config_file)
 
 class nms_interactive(Cmd):
-    prompt = Config._PROGRAM_SLUG + "> "
+    prompt = _CONFIG['shell']['slug'] + "> "
     intro = "Welcome to the {} v{} app to test your network!\n\n" \
             "Type ? to list commands.\n For questions, please "\
             "contact the administrator who granted you this access.\n\n".format(
-                    Config._PROGRAM_NAME,
-                    Config._VERSION)
+                    _CONFIG['shell']['name'],
+                    _CONFIG['shell']['version'])
     _TARGETS = []
     _cwd = os.getcwd()
     _now = datetime.now()
@@ -25,9 +29,9 @@ class nms_interactive(Cmd):
     
     os.makedirs(_path, exist_ok=True)
     
-    _LOGFILE = _path + Config._PROGRAM_SLUG + "_sessionat_" + _ftime + ".nmsLog"
+    _LOGFILE = _path + _CONFIG['shell']['slug'] + "_sessionat_" + _ftime + ".nmsLog"
     
-    logger = logging.getLogger(Config._PROGRAM_SLUG)
+    logger = logging.getLogger(_CONFIG['shell']['slug'])
     logger.setLevel(logging.DEBUG)
 
     logfileHandle = logging.FileHandler(_LOGFILE)
@@ -233,10 +237,12 @@ class nms_interactive(Cmd):
     def _ensure_targets(self):
         if(len(self._TARGETS) == 0):
             self.logger.error("Targets file is empty!")
-            for host in Config._DEFAULT_HOSTS:
+            for host in _CONFIG['default']['targets']:
                 self.logger.error("ensure_targets: adding {}".format(host))
                 self._TARGETS.append(host)
         else:
             self.logger.info("ensure_targets: valid targets exist")
+
+
 if __name__ == '__main__':
     nms_interactive().cmdloop()

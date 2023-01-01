@@ -1,0 +1,17 @@
+---
+shell:
+  name: "Network Tester Interactive"
+  version: "1.21"
+  slug: "net_test"
+
+gui:
+  name: "Toolset Launcher"
+  version: "0.01"
+  slug: "ts_gui"
+
+default:
+  targets:
+    - 1.1.1.1
+    - 8.8.8.8
+    - 3.us.pool.ntp.org
+  
