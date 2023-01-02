@@ -1,3 +1,3 @@
-def ping_runner():
+def ping_runner(targetList):
     print("Ping runner")
 
