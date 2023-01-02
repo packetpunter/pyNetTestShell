@@ -10,7 +10,7 @@ requires-python = ">=3.10"
 classifiers = [
     "Development Status::5 Production/Stable",
     "Environment::Console",
-    "Intended Audience::System Administrators".
+    "Intended Audience::System Administrators",
     "Intended Audeience::Telecommunications Industry",
     "License::OSI Approved::The Unlicense (Unlicense)",
     "Natural Language::English",

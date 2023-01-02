@@ -1,4 +1,4 @@
 import speedtest
 
 def speed_runner():
-    pass
+    print("Speed runner")

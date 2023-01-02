@@ -1,3 +1,3 @@
 def ping_runner():
-    pass
+    print("Ping runner")
 

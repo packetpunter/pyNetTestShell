@@ -9,10 +9,22 @@ from datetime import datetime
 from yaml import safe_load
 from ipaddress import ip_network
 
-from .perf import runner as perf_runner
-from .ping import runner as ping_runner
-from .speed import runner as speed_runner
-from .trace import runner as trace_runner
+import perf 
+import ping
+import speed 
+import trace 
+
+class TestHistory:
+    ''' Top level python object to manage the\n'''\
+    '''  history from the various test types,\n'''\
+    '''  via read,write to the sqlite database'''
+    def _init__(self):
+        with open("../Config.yml", "r") as config_file:
+            self._basepath = self_load(config_file)['default']['base_path']
+    
+    def __get_path(self) -> str:
+        return self._basepath
+
 
 class Tester:
     ''' Top level python object to create the \n'''\
@@ -20,30 +32,30 @@ class Tester:
     '''  is stored on disk and in memory.\n'''\
     '''  This class is instanciated \n'''\
     '''  once at the beginning and holds all the info.'''
-    def __init__(self, tests):
+    def __init__(self, tests=[]):
         with open("../Config.yml", "r") as config_file:
             self._CONFIG = safe_load(config_file)
 
         self._TARGETS = []
-        self._cwd = os.getcwd()
+        self._base = os.getcwd() + "/" + self._CONFIG['default']['base_path']
         self._now = datetime.now()
         self._fday = self._now.strftime("%Y/%m/%d")
         self._ftime = self._now.strftime("%H:%M")
-        self._fpath = self._cwd + "/output/" + self._fday + "/"
+        self._fpath = self._base + "/output/" + self._fday + "/"
 
         os.makedirs(self._fpath, exist_ok=True)
 
         self._LOGFILE = self._fpath + self._CONFIG['tester']['slug'] + \
                 "_session_at_" + self._ftime + ".testerLog"
         
-        self.logger = logging.getLogger(_CONFIG['tester']['slug'])
+        self.logger = logging.getLogger(self._CONFIG['tester']['slug'])
         self.logger.setLevel(logging.INFO)
 
         self.logfileHandle = logging.FileHandler(self._LOGFILE)
         self.logfileHandle.setLevel(logging.INFO)
 
         self._formatter = logging.Formatter(
-                "%(asctime)s::%(name)s::%(levelname)s: %(message)s".
+                "%(asctime)s::%(name)s::%(levelname)s: %(message)s", 
                 datefmt = "%Y-%m-%d-T-%I:%M:%S %p")
         self.logfileHandle.setFormatter(self._formatter)
 
@@ -56,23 +68,22 @@ class Tester:
         print(msg)
         self.logger.info(msg)
 
-    def _runners(self, test_list):
+    def _runners(self, test) -> None:
         ''' execute the runner for the task '''
-        for test in test_list:
-            match test:
+        for t in test:
+            match t:
                 case 'speed':
-                    speed_runner()
+                    speed.speed_runner()
                 case 'route'|'routes':
-                    trace_runner()
+                    trace.trace_runner()
                 case 'ping'|'pings':
-                    ping_runner()
+                    ping.ping_runner()
                 case 'perf'|'iperf':
                     self._logprint("iPerf3 test implemented in future release")
                 case default:
                     self._logprint(f"Unable to match test {test}")
-
-        
-        self._logprint("Test list executed")
+                    return 
+        self._logprint("Test executed")
                 
     def _ensure_targets(self):
         if(len(self._TARGETS) == 0):
@@ -140,4 +151,6 @@ class Tester:
         self._TARGETS = []
         self._TARGETS = targetList.copy()
 
+    def _get_path(self) -> str:
+        return self._base
 

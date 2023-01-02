@@ -1,2 +1,2 @@
 def trace_runner():
-    pass
+    print("Trace runner")
