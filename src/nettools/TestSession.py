@@ -104,7 +104,6 @@ class Tester:
         ''' it tries to convert it to one via dns.\n'''\
         ''' if it cannot convert the target IP, it returns nothing.'''
 
-        _domains = []
         _temp_target = ""
 
         try:
