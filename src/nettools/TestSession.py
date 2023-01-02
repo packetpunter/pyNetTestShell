@@ -74,11 +74,11 @@ class Tester:
         for t in test:
             match t:
                 case 'speed':
-                    speed.speed_runner()
+                    speed.speed_runner(self._TARGETS)
                 case 'route'|'routes':
-                    trace.trace_runner()
+                    trace.trace_runner(self._TARGETS)
                 case 'ping'|'pings':
-                    ping.ping_runner()
+                    ping.ping_runner(self._TARGETS)
                 case 'perf'|'iperf':
                     self._logprint("iPerf3 test implemented in future release")
                 case default:
@@ -89,13 +89,13 @@ class Tester:
     def _ensure_targets(self):
         if(len(self._TARGETS) == 0):
             for host in self._CONFIG['default']['targets']:
-                self.logger.error(f"Ensuring default targets. Adding {host}")
+                self.logger.debug(f"Ensuring default targets. Adding {host}")
                 self._TARGETS.append(host)
         else:
-            self.logger.info("validating user specified targets.")
+            self.logger.debug("validating user specified targets.")
             for host in self._TARGETS:
                 host = self._cleantarget(host)
-            self.logger.info("Valid targets exist.")
+            self._logprint("Valid targets exist.")
 
     def _cleantarget(self, target) -> str:
         ''' validate targets to add.\n '''\
@@ -113,7 +113,7 @@ class Tester:
                 return str(_temp_target.network_address)
             else:
                 _t = _temp_target.network_address + 1
-                self.logger.info(f"Target is network. Targeting {_t}")
+                self._logprint(f"Target is network. Targeting {_t}")
                 return self(_t)
         
         except ValueError as v:
@@ -121,7 +121,7 @@ class Tester:
                 self.logger.error(f"IP was for a CIDR. Must be single host only! Skipping {target}!")
                 return ""
             if("does not appear to be" in repr(v)):
-                self.logger.info("Target is not apparently ip, converting")
+                self._logprint(f"Target {target} is not apparently ip, converting")
 
                 # source oreilly
                 # source url https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch08s15.html
@@ -132,20 +132,20 @@ class Tester:
                     self.logger.info("target is valid domain name..")
                     try:
                         resolved_ip = dns.resolver.resolve(real_result, "A")
-                        self.logger.info(f"validated domain->ip {resolved_ip}")
+                        self._logprint(f"validated {target}->ip {resolved_ip}")
                         return resolved_ip
                     except DNSException:
-                        self.logger.error(f"Unable to resolve {target}. Skipping..")
+                        self._logprint(f"Unable to resolve {target}. Skipping..")
                         return ""
                 else:
-                    self.logger.error(f"invalid host specified {target}. not adding to target list.")
+                    self._logprint(f"invalid host specified {target}. not adding to target list.")
                     return ""
      
     def _get_targets(self) -> list:
         return self._TARGETS
 
     def _set_targets(self, targetList):
-        self.logger.info("Targets cleared and reset")
+        self._logprint("Targets cleared and reset")
         for target in targetList:
             target = self._cleantarget(target)
 
