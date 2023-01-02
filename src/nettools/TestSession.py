@@ -70,6 +70,7 @@ class Tester:
 
     def _runners(self, test) -> None:
         ''' execute the runner for the task '''
+        self._ensure_targets()
         for t in test:
             match t:
                 case 'speed':
