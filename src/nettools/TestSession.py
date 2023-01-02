@@ -74,7 +74,7 @@ class Tester:
         for t in test:
             match t:
                 case 'speed':
-                    speed.speed_runner(self._TARGETS)
+                    speed.speed_runner()
                 case 'route'|'routes':
                     trace.trace_runner(self._TARGETS)
                 case 'ping'|'pings':
