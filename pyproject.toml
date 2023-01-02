@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,6 +7,7 @@ name = "pyNetTestShell"
 description = "An interactive python shell to test the network."
 readme = "README.md"
 requires-python = ">=3.10"
+version = "2.0a0"
 classifiers = [
     "Development Status::5 Production/Stable",
     "Environment::Console",
@@ -17,3 +18,12 @@ classifiers = [
     "Operating System::POSIX::Linux",
     "Topic::System::Network::Monitoring"
 ]
+dependencies = [
+    "dnspython",
+    "PyYAML",
+    "pandas",
+    "speedtest-cli"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/packetpunter/pyNetTestShell"

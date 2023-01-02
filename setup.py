@@ -1,20 +1,31 @@
+from setuptools import setup, find_packages
+
 with open('README.md') as f:
     readme = f.read()
 
 with open('LICENSE') as f:
     license = f.read()
-import yaml
-with open ("src/Config.yml", "r") as config_file:
-    config = config_file.read()
 
 setup(
-    name=config['shell']['slug'],
-    version=config['shell']['version'],
-    description=config['shell']['description'],
+    name='net-test',
+    version='2.0a0',
+    description='A cli app to test the network',
     long_description=readme,
     author='John Bell',
     author_email='blue@jbell.xyz',
     url='https://github.com/packetpunter/pyNetTestShell',
     license=license,
-    packages=find_packages()
+    packages=find_packages(),
+    install_requires= [
+        'pandas',
+        'PyYAML',
+        'dnspython',
+        'speedtest-cli'
+    ],
+    setup_requires = [
+        "PyYAML",
+        "pandas",
+        "dnspython",
+        "speedtest-cli"
+    ]
 )
