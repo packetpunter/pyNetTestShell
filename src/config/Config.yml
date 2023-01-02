@@ -12,9 +12,13 @@ shell:
     are included.\n
 
 tester:
-  name: "Network Tester Backend"
+  name: "NetworkTesterBackend"
   version: "1.0a0"
   slug: "tester"
+  description: >
+    A backend library to enable testing of the network.\n
+    It uses builtin linux commands to run tests,\n
+    and logs to database.
 
 gui:
   name: "Toolset Launcher"

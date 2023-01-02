@@ -9,6 +9,7 @@ from datetime import datetime
 from yaml import safe_load
 from ipaddress import ip_network
 
+import config
 import perf 
 import ping
 import speed 

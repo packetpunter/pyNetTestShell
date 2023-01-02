@@ -11,3 +11,4 @@ clean:
 	@if [ -d ./__pycache__ ]; then rm -rf ./__pycache__; fi
 	@if [ -d ./build ]; then rm -rf ./build; fi
 	@if [ -d ./dist ]; then rm -rf ./dist; fi
+	@rm -rf *.egg
