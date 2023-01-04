@@ -1,4 +1,6 @@
 SHELL := /usr/bin/bash
+.DEFAULT_GOAL := build
+
 init:
 	pip install -r requirements.txt
 
@@ -11,4 +13,8 @@ clean:
 	@if [ -d ./__pycache__ ]; then rm -rf ./__pycache__; fi
 	@if [ -d ./build ]; then rm -rf ./build; fi
 	@if [ -d ./dist ]; then rm -rf ./dist; fi
-	@rm -rf *.egg
+	@if [ -d ./*.egg* ]; then rm -rf *.egg*; fi
+	@if [ -d ./src/*.egg* ] rm -rf ./src/*.egg*; fi
+
+build:
+	python3 -m build

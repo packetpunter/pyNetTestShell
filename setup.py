@@ -28,15 +28,9 @@ setup(
     package_data = {"": ["*.yml"]},
     include_package_data=True,
     install_requires= [
-        'pandas',
-        'PyYAML',
-        'dnspython',
-        'speedtest-cli'
+        'PyYAML'
     ],
     setup_requires = [
-        "PyYAML",
-        "pandas",
-        "dnspython",
-        "speedtest-cli"
+        "PyYAML"
     ]
 )
