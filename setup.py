@@ -23,7 +23,7 @@ setup(
     author_email='blue@jbell.xyz',
     url='https://github.com/packetpunter/pyNetTestShell',
     license=license,
-    packages=find_packages(where="src"),
+    packages=find_packages(where="src/"),
     package_dir={"": "src"},
     package_data = {"": ["*.yml"]},
     include_package_data=True,

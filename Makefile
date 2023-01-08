@@ -19,3 +19,6 @@ clean:
 	rm -rf $(shell find . -name '__pycache__')
 build:
 	python3 -m build
+
+dev-install:
+	pip install -e .
