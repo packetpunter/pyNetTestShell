@@ -10,22 +10,25 @@ from yaml import safe_load
 from ipaddress import ip_network
 
 import config
-import perf 
-import ping
-import speed 
-import trace 
+from .perf import * 
+from .ping import *
+from .speed import *
+from .trace import *
 
 class TestHistory:
     ''' Top level python object to manage the\n'''\
     '''  history from the various test types,\n'''\
     '''  via read,write to the sqlite database'''
     def _init__(self):
-        with open("../Config.yml", "r") as config_file:
-            self._basepath = self_load(config_file)['default']['base_path']
+        self._basepath = config.CONFIG['default']['base_path']
     
     def __get_path(self) -> str:
         return self._basepath
 
+    def append(self, message) -> None:
+        ''' convert log message to db entry '''\
+        ''' TODO: convert from Print to remove dbl print '''
+        print(f"HISTORY LOGGER::: {message}")
 
 class Tester:
     ''' Top level python object to create the \n'''\
@@ -34,8 +37,7 @@ class Tester:
     '''  This class is instanciated \n'''\
     '''  once at the beginning and holds all the info.'''
     def __init__(self, tests=[]):
-        with open("../Config.yml", "r") as config_file:
-            self._CONFIG = safe_load(config_file)
+        self._CONFIG = config.CONFIG
 
         self._TARGETS = []
         self._base = os.getcwd() + "/" + self._CONFIG['default']['base_path']
@@ -61,31 +63,29 @@ class Tester:
         self.logfileHandle.setFormatter(self._formatter)
 
         self.logger.addHandler(self.logfileHandle)
-
+        self._HISTORY = TestHistory()
         self._runners(tests)
-
+        
     def _logprint(self, msg):
         ''' print to console and log '''
         print(msg)
-        self.logger.info(msg)
+        self.logger.debug(msg)
+        self._HISTORY.append(msg)
 
     def _runners(self, test) -> None:
         ''' execute the runner for the task '''
         self._ensure_targets()
-        for t in test:
-            match t:
-                case 'speed':
-                    speed.speed_runner()
-                case 'route'|'routes':
-                    trace.trace_runner(self._TARGETS)
-                case 'ping'|'pings':
-                    ping.ping_runner(self._TARGETS)
-                case 'perf'|'iperf':
-                    self._logprint("iPerf3 test implemented in future release")
-                case default:
-                    self._logprint(f"Unable to match test {test}")
-                    return 
-        self._logprint("Test executed")
+        results = "{invalid results}"
+        match test:
+            case 'speed':
+                results = speed_runner()
+            case 'route'|'routes':
+                results = trace_runner(self._TARGETS)
+            case 'ping'|'pings':
+                results = ping_runner(self._TARGETS)
+            case 'perf'|'iperf':
+                results = "iPerf3 test implemented in future release"
+        self._logprint(f"TEST {test}:: RESULTS {results}")
                 
     def _ensure_targets(self):
         if(len(self._TARGETS) == 0):

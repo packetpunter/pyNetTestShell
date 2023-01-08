@@ -10,13 +10,10 @@ env:
 
 clean:
 	@if [ -d ./venv ]; then rm -rf ./venv; fi
-	@if [ -d ./__pycache__ ]; then rm -rf ./__pycache__; fi
 	@if [ -d ./build ]; then rm -rf ./build; fi
 	@if [ -d ./dist ]; then rm -rf ./dist; fi
-	@if [ -d ./*.egg* ]; then rm -rf *.egg*; fi
-	@if [ -d ./src/*.egg* ]; then rm -rf ./src/*.egg*; fi
-	@if [ -d ./src/__pycache__ ]; then rm -rf ./src/__pycache__; fi
-	rm -rf $(shell find . -name '__pycache__')
+	@rm -rf $(shell find . -name '*__pycache__*')
+	@rm -rf $(shell find . -name '*.egg*')
 build:
 	python3 -m build
 
