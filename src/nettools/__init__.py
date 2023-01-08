@@ -1,4 +1,4 @@
-from TestSession import Tester
+from .TestSession import Tester
 
 if __name__ == "__main__":
     Tester()

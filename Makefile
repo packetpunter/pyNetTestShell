@@ -15,6 +15,7 @@ clean:
 	@if [ -d ./dist ]; then rm -rf ./dist; fi
 	@if [ -d ./*.egg* ]; then rm -rf *.egg*; fi
 	@if [ -d ./src/*.egg* ]; then rm -rf ./src/*.egg*; fi
-
+	@if [ -d ./src/__pycache__ ]; then rm -rf ./src/__pycache__; fi
+	rm -rf $(shell find . -name '__pycache__')
 build:
 	python3 -m build
