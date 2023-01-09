@@ -75,7 +75,7 @@ class Tester:
     def _runners(self, test) -> None:
         ''' execute the runner for the task '''
         self._ensure_targets()
-        results = "{invalid results}"
+        results = ""
         match test:
             case 'speed':
                 results = speed_runner()
@@ -85,7 +85,8 @@ class Tester:
                 results = ping_runner(self._TARGETS)
             case 'perf'|'iperf':
                 results = "iPerf3 test implemented in future release"
-        self._logprint(f"TEST {test}:: RESULTS {results}")
+        if results: 
+            self._logprint(f"TEST {test}:: RESULTS {results}")
                 
     def _ensure_targets(self):
         if(len(self._TARGETS) == 0):
