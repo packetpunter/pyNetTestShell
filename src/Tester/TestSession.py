@@ -9,7 +9,7 @@ from datetime import datetime
 from yaml import safe_load
 from ipaddress import ip_network
 
-import config
+import TestConfig
 from .perf import * 
 from .ping import *
 from .speed import *
@@ -20,7 +20,7 @@ class TestHistory:
     '''  history from the various test types,\n'''\
     '''  via read,write to the sqlite database'''
     def _init__(self):
-        self._basepath = config.CONFIG['default']['base_path']
+        self._basepath = TestConfig.CONFIG['default']['base_path']
     
     def __get_path(self) -> str:
         return self._basepath
@@ -37,7 +37,7 @@ class Tester:
     '''  This class is instanciated \n'''\
     '''  once at the beginning and holds all the info.'''
     def __init__(self, tests=[]):
-        self._CONFIG = config.CONFIG
+        self._CONFIG = TestConfig.CONFIG
 
         self._TARGETS = []
         self._base = os.getcwd() + "/" + self._CONFIG['default']['base_path']

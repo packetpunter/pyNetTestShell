@@ -8,7 +8,7 @@ with open('README.md') as f:
 with open('LICENSE') as f:
     license = f.read()
 
-data_path = os.path.join(os.path.dirname(__file__), 'src','config', 'Config.yml')
+data_path = os.path.join(os.path.dirname(__file__), 'src','TestConfig', 'Config.yml')
 
 with open(data_path) as config_file:
     from yaml import safe_load

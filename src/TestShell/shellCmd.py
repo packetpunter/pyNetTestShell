@@ -1,6 +1,6 @@
 from cmd import Cmd
-import config
-from tester import TestSession
+import TestConfig
+from Tester import TestSession
 import os
 from datetime import datetime
 import logging
@@ -8,15 +8,15 @@ from time import sleep
 
 class shellCmdInteractive(Cmd):
     
-    prompt = config.CONFIG['shell']['slug'] + "> "
+    prompt = TestConfig.CONFIG['shell']['slug'] + "> "
     intro = "Welcome to the {} v{} app to test your network!\n\n" \
             "Type ? to list commands.\n For questions, please "\
             "contact the administrator who granted you this access.\n\n".format(
-                    config.CONFIG['shell']['name'],
-                    config.CONFIG['shell']['version'])
+                    TestConfig.CONFIG['shell']['name'],
+                    TestConfig.CONFIG['shell']['version'])
 
 
-    _CONFIG = config.CONFIG
+    _CONFIG = TestConfig.CONFIG
     _TARGETS= []
     _TESTER = TestSession.Tester()
     _base = os.getcwd() + "/" + _CONFIG['default']['base_path']
