@@ -1,10 +1,10 @@
 from cmd import Cmd
 import config
 from tester import TestSession
-from yaml import safe_load
 import os
 from datetime import datetime
 import logging
+from time import sleep
 
 class shellCmdInteractive(Cmd):
     
@@ -69,7 +69,6 @@ class shellCmdInteractive(Cmd):
         ''' sleep5m/wait5m, sleep10/wait10,\n'''\
         ''' sleep60/wait60/sleep1m/wait1m\n'''\
         ''' sleep1h/wait1h, sleep30m/wait30m'''
-
         actions = verbage.split()
         if(len(actions) == 0):
             logger.error("do_run: no actions specified")
@@ -95,8 +94,7 @@ class shellCmdInteractive(Cmd):
                     self._sleep_1h()
                 case 'sleep30m'|'wait30m':
                     self._sleep_30m()
-                #TODO: FIX - likely takes all args
-                case default:
+                case _:
                     TestSession.Tester(action)
 
     def do_set(self, user_input):
