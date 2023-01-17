@@ -1,0 +1,34 @@
+---
+shell:
+  name: "Network Tester Interactive"
+  version: "2.1.0"
+  slug: "net_test"
+  description: >
+    A tool to begin testing your network, with
+    standard tools like ping, traceroute.\n
+    This provides additonal logging capabilities for
+    historical view.\n
+    Additional tests like speedtest and iperf
+    are included.\n
+
+tester:
+  name: "NetworkTesterBackend"
+  version: "2.1.0"
+  slug: "tester"
+  description: >
+    A backend library to enable testing of the network.\n
+    It uses builtin linux commands to run tests,\n
+    and logs to database.
+
+gui:
+  name: "Toolset Launcher"
+  version: "0.01"
+  slug: "ts_gui"
+
+default:
+  targets:
+    - 1.1.1.1
+    - 8.8.8.8
+    - 3.us.pool.ntp.org
+  base_path: "network-testing"
+  sleep_interval_seconds: 60

@@ -19,20 +19,16 @@ The logfile is located in ```output/$YEAR/$MONTH/$DAY``` and the file is named a
 ## Usage
 First preparation
 ```bash
-python3 -m pip install venv
-python3 -m venv venv/
-source venv/bin/activate
-pip install -r requirements.txt
+python3 -m pip install pyNetTestShell-2.0a0-py3-none-any.whl
 ```
 Running thereafter
 ```bash
-source venv/bin/activate
-python shell.py
+python3 -m TestShell
 ```
 
 ### Sample 
 ```bash
-Welcome to the Network Tester Interactive v1.21 app to test your network!
+Welcome to the Network Tester Interactive v2.0a0 app to test your network!
 
 Type ? to list commands.
  For questions, please contact the administrator who granted you this access.
