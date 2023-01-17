@@ -13,7 +13,7 @@ import TestConfig
 from .perf import * 
 from .ping import *
 from .speed import *
-from .trace import *
+from .mtr import *
 
 class TestHistory:
     ''' Top level python object to manage the\n'''\
@@ -68,7 +68,6 @@ class Tester:
         
     def _logprint(self, msg):
         ''' print to console and log '''
-        print(msg)
         self.logger.debug(msg)
         self._HISTORY.append(msg)
 
@@ -78,12 +77,22 @@ class Tester:
         results = ""
         match test:
             case 'speed':
+                self._logprint("Begin speedtest")
                 results = speed_runner()
             case 'route'|'routes':
+                self._logprint("Begin route testing")
                 results = trace_runner(self._TARGETS)
+                for r in results:
+                    self._logprint(f"TEST {test}:: RESULTS {r}")
+                results = []
             case 'ping'|'pings':
+                self._logprint("Begin ping tests")
                 results = ping_runner(self._TARGETS)
+                for r in results:
+                    self._logprint(f"TEST {test}:: RESULTS {r}")
+                results = []
             case 'perf'|'iperf':
+                self._logprint("Begin iperf test")
                 results = "iPerf3 test implemented in future release"
         if results: 
             self._logprint(f"TEST {test}:: RESULTS {results}")
