@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0
+### Added
+- changelog
+
+### Changed
+- move to production branch
+- removed alpha tag
+
 ## 2.1-alpha
 
 ### Added

@@ -1,7 +1,7 @@
 ---
 shell:
   name: "Network Tester Interactive"
-  version: "2.1-alpha"
+  version: "2.1.0"
   slug: "net_test"
   description: >
     A tool to begin testing your network, with
@@ -13,7 +13,7 @@ shell:
 
 tester:
   name: "NetworkTesterBackend"
-  version: "2.1-alpha"
+  version: "2.1.0"
   slug: "tester"
   description: >
     A backend library to enable testing of the network.\n
