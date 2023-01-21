@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.0-alpha
+## Added
+- NikeLog package for providing centralized logging
+- Flamegrid package for providing an alternative to the net_shell, for one time commands
+
 ## 2.1.0
 ### Added
 - changelog

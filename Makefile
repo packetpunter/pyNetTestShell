@@ -1,4 +1,3 @@
-SHELL := /usr/bin/bash
 .DEFAULT_GOAL := build
 
 init:

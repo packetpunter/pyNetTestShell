@@ -7,7 +7,7 @@ name = "pyNetTestShell"
 description = "An interactive python shell to test the network."
 readme = "README.md"
 requires-python = ">=3.10"
-version = "2.1.0"
+version = "2.2.0-alpha"
 classifiers = [
     "Development Status::5 Production/Stable",
     "Environment::Console",
@@ -22,7 +22,10 @@ dependencies = [
     "dnspython",
     "PyYAML",
     "pandas",
-    "speedtest-cli"
+    "speedtest-cli",
+    "numpy",
+    "fire",
+    "tqdm"
 ]
 
 [project.urls]

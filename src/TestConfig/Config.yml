@@ -25,6 +25,23 @@ gui:
   version: "0.01"
   slug: "ts_gui"
 
+cli_script:
+  name: "flamegrid"
+  version: "1.0.0-alpha"
+  slug: "flamegrid"
+  description: >
+    A command line script interfacing with the Tester class,
+    as an alternative to the shell.
+    Uses google's python flame library.
+
+logger:
+  name: "Nike Log Storage Engine"
+  version: "0.0.1-alpha"
+  slug: "nikelog"
+  descripton: >
+    Logging engine designed to store performance data,
+    in a consumable format for time based analysis.
+
 default:
   targets:
     - 1.1.1.1
