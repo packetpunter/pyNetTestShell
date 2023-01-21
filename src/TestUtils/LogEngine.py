@@ -1,37 +1,8 @@
-from dataclasses import dataclass, field
-from enum import StrEnum, auto
+import os
 from datetime import datetime
 import TestConfig
+from TestResults import TestType
 
-'''
->>> a = TestResult(host="tits", status="failed", test_type="420", time_stamp = datetime.now() )
->>> a
-TestResult(host='tits', status='failed', test_type='420')
->>> a.time_stamp
-datetime.datetime(2023, 1, 21, 0, 16, 28, 913384)
->>> TestType(a.test_type)
-<TestType.ALL: '420'>
->>> TestType(a.test_type)
-<TestType.ALL: '420'>
-'''
-class TestType(StrEnum):
-    PERF = auto()
-    ROUTE = auto()
-    SPEED = auto()
-    PING = auto()
-    OPCMD = auto()
-    ALL = str(420)
-
-@dataclass(frozen=True)
-class TestResult:
-    ''' Top level python object to manage the log formatting'''
-    src_host: str
-    dest_host: str
-    status: str
-    test_type: str
-    time_stamp: datetime = field(repr=False)
-    results: str = field(compare=False, hash=False, repr=False)
-    logfile: str = field(compare=False, hash=False)
 
 class TestHistory:
     ''' Top level python object to manage the\n'''\
