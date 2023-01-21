@@ -7,16 +7,17 @@ import os
 import csv
 import pandas as pd
 import numpy as np
-from AthenianTalismans import LogEngine, TestType
+from TestUtils import LogEngine 
 from Tester import perf, ping, speed, mtr
 
 class route(object):
-    mtr.run()
+    mtr._mtr(self._TARGETS)
+
 class ping(object):
-    ping.run()
+    ping.ping_runner(self._TARGETS)
 
 class perf(object):
-    perf.run()
+    print("iperf implemented later")
 
 class Pipeline(object):
     def __init__(self):

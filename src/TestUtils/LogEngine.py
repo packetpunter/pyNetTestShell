@@ -37,7 +37,7 @@ class TestHistory:
     ''' Top level python object to manage the\n'''\
     '''  history from the various test types,\n'''\
     '''  via read,write to the '''
-    def _init__(self):
+    def __init__(self):
         self._basepath = TestConfig.CONFIG['default']['base_path']
         self._now = datetime.now()
         self._fday = self._now.strftime("%Y/%m/%d")
