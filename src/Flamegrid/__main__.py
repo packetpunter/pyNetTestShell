@@ -1,4 +1,4 @@
-from .Matrix import run
+from .Flamegrid import run
 
 def main():
     run()

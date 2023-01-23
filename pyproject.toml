@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "pyNetTestShell"
 description = "An interactive python shell to test the network."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 version = "2.2.0-alpha"
 classifiers = [
     "Development Status::5 Production/Stable",

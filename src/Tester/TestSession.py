@@ -4,6 +4,7 @@ import logging
 
 import dns.resolver
 
+
 from re import search
 from datetime import datetime
 from yaml import safe_load

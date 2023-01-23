@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 import TestConfig
-from TestResults import TestType
+from .TestResults import TestType
 
 
 class TestHistory:

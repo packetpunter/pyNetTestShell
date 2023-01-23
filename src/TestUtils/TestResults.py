@@ -1,4 +1,3 @@
-from dataclasses import dataclass, field
 from enum import StrEnum, auto
 from abc import ABC, abstractmethod
 import pandas as pd
@@ -23,35 +22,26 @@ class TestType(StrEnum):
     OPCMD = auto()
     ALL = str(420)
 
-# @dataclass(frozen=True)
-# class TestResult:
-#     ''' Top level python object to manage the log formatting'''
-#     src_host: str
-#     dest_host: str
-#     status: str
-#     test_type: str
-#     time_stamp: datetime = field(repr=False)
-#     results: str = field(compare=False, hash=False, repr=False)
-#     logfile: str = field(compare=False, hash=False)
+
 
 class TestResultInterface(ABC):
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def from_json(self, result_data: str):
         ...
 
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def from_csv(self, result_data: str):
         ...
     
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def from_dict(self, result_data: dict):
         ...
     
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def from_list(self, result_data: list):
         ...
 

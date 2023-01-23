@@ -9,24 +9,67 @@ import pandas as pd
 import numpy as np
 from TestUtils import LogEngine 
 from Tester import perf, ping, speed, mtr
+import TestConfig
+
+_CONFIG = TestConfig.CONFIG
+_TARGETS = []
 
 class tester(object):
-
+    
     def _ensure_targets(self):
-    if(len(self._TARGETS) == 0):
-        for host in self._CONFIG['default']['targets']:
-            #self.logger.debug(f"Ensuring default targets. Adding {host}")
-            self._TARGETS.append(host)
-        #else:
-            #self.logger.debug("validating user specified targets.")
-            #for host in self._TARGETS:
-            #    host = self._cleantarget(host)
-            #self._logprint("Valid targets exist.")
+        global _TARGETS
+        if(len(_TARGETS) == 0):
+            for host in _CONFIG['default']['targets']:
+                print(f"Ensuring default targets. Adding {host}")
+                _TARGETS.append(host)
+        print(f"targets list is now {len(_TARGETS)}")
 
-    def run(self, targets=_ensure_targets(), tests=[]):
+    def run(self, itargets, tests):
+        global _TARGETS
+        _valid_targets = list()
+        _valid_tests = list()
+        
+        if (len(itargets) == 0): self._ensure_targets()
+        match itargets: # determine how to proceed for single vs list of hosts
+            case str():
+                print(f"resetting target list for new single target: {itargets}")
+                _TARGETS = list()
+                _TARGETS.append(itargets)
+            case list():
+                _valid_targets = list()
+                for t in itargets:
 
+                _TARGETS = itargets
+        
+        match tests: #determine how to proceed for single test vs list of tests
+            case str():
+                runner(tests)
+            
+            case list():
+                for i in tests:
+                    print(f"found group of tests, test: {i}")
+        
 
-class analyzer(object):
+        for h in _TARGETS:
+            for t in tests:
+                print(f"running {t} for {h}")
+
+class teller(object):
+    
+    def history(self, target):
+
+        def ping(self, target):
+            print(f"ping history for {target}..")
+
+        def perf(self, target):
+            print("perf history for {target}..")
+
+        def route(self, target):
+            print(f"route history for {target}")
+
+        def speed(self):
+            print("my speed history..")
+
 
 # class route(object):
 #     mtr._mtr(self._TARGETS)
@@ -42,11 +85,9 @@ class analyzer(object):
 
 class Pipeline(object):
     def __init__(self):
-        self._ensure_targets()
-        self.tester = run_test()
-        self.describe = describe()
+        self.test = tester()
+        self.tell = teller()
 
 
 def run():
-    self._TARGETS = []
     fire.Fire(Pipeline)
