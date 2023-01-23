@@ -3,17 +3,6 @@ from abc import ABC, abstractmethod
 import pandas as pd
 from datetime import datetime
 
-'''
->>> a = TestResult(host="tits", status="failed", test_type="420", time_stamp = datetime.now() )
->>> a
-TestResult(host='tits', status='failed', test_type='420')
->>> a.time_stamp
-datetime.datetime(2023, 1, 21, 0, 16, 28, 913384)
->>> TestType(a.test_type)
-<TestType.ALL: '420'>
->>> TestType(a.test_type)
-<TestType.ALL: '420'>
-'''
 class TestType(StrEnum):
     PERF = auto()
     ROUTE = auto()
