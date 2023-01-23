@@ -7,6 +7,11 @@
 - TestUtils package for providing centralized logging
 - Flamegrid package for providing an alternative to the net_shell, for one time commands
 
+### Changed
+- moved a lot of logging functionality out of TestSession into centralized TestUtils.LogEngine
+- created target validation as TestUtils.TestTargets using custom objects
+- attempts first TestUtils.TestResults objects for standard test result objects
+
 ## 2.1.0
 
 ### Added

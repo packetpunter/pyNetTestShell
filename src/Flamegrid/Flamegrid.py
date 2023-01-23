@@ -17,35 +17,27 @@ _CONFIG = TestConfig.CONFIG
 class tester(object):
     def __init__(self):
         self._TARGETS = list()
-        self._TESTS = list()
 
-    def _ensure_targets(self):
-        if(len(self._TARGETS) == 0):
-            for host in _CONFIG['default']['targets']:
-                self._TARGETS.append(ValidAddress(host))
-        print(f"targets list is now {len(self._TARGETS)}")
+    def defaults(self):
+        Tester(test="route", targets=_CONFIG['default']['targets']).run()
+        Tester(test="ping", targets=_CONFIG['default']['targets']).run()
+        Tester(test="speed", targets=_CONFIG['default']['targets']).run()
+         
 
-    def run(self, itargets: tuple(), tests: tuple()):
+    def _submit_target(self, target: str):
+        self._TARGETS.append(ValidAddress(target))
 
-        if (len(itargets) == 0): 
-            self._ensure_targets()
+    def ping(self, target):
+        self._submit_target(target)
+        Tester("ping", self._TARGETS).run()
         
-        if "," in itargets:
-            for x in itargets.split(","):
-                self._TARGETS.append(ValidAddress(x))
-        else:
-            self._TARGETS = itargets
-        
-        if "," in tests:
-            for x in tests.split(","):
-                self._TESTS.append(x)
-        else:
-            self._TESTS = tests
-        
-        for t in self._TESTS:
-            print(f"Spawning Tester with Test {t} against host set {self._TARGETS}")
-            _tester = Tester(test=t, targets=self._TARGETS)
-            _tester.run()
+
+    def route(self, target):
+        self._submit_target(target)
+        Tester("route", self._TARGETS).run()
+
+    def speed(self):
+        Tester("speed", self._TARGETS).run()
 
 class teller(object):
     
