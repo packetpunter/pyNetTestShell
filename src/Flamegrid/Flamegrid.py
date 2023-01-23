@@ -8,51 +8,44 @@ import csv
 import pandas as pd
 import numpy as np
 from TestUtils import LogEngine 
-from Tester import perf, ping, speed, mtr
 import TestConfig
+from TestUtils.TestTargets import ValidAddress
+from Tester.TestSession import Tester
 
 _CONFIG = TestConfig.CONFIG
-_TARGETS = []
 
 class tester(object):
-    
+    def __init__(self):
+        self._TARGETS = list()
+        self._TESTS = list()
+
     def _ensure_targets(self):
-        global _TARGETS
-        if(len(_TARGETS) == 0):
+        if(len(self._TARGETS) == 0):
             for host in _CONFIG['default']['targets']:
-                print(f"Ensuring default targets. Adding {host}")
-                _TARGETS.append(host)
-        print(f"targets list is now {len(_TARGETS)}")
+                self._TARGETS.append(ValidAddress(host))
+        print(f"targets list is now {len(self._TARGETS)}")
 
-    def run(self, itargets, tests):
-        global _TARGETS
-        _valid_targets = list()
-        _valid_tests = list()
-        
-        if (len(itargets) == 0): self._ensure_targets()
-        match itargets: # determine how to proceed for single vs list of hosts
-            case str():
-                print(f"resetting target list for new single target: {itargets}")
-                _TARGETS = list()
-                _TARGETS.append(itargets)
-            case list():
-                _valid_targets = list()
-                for t in itargets:
+    def run(self, itargets: tuple(), tests: tuple()):
 
-                _TARGETS = itargets
+        if (len(itargets) == 0): 
+            self._ensure_targets()
         
-        match tests: #determine how to proceed for single test vs list of tests
-            case str():
-                runner(tests)
-            
-            case list():
-                for i in tests:
-                    print(f"found group of tests, test: {i}")
+        if "," in itargets:
+            for x in itargets.split(","):
+                self._TARGETS.append(ValidAddress(x))
+        else:
+            self._TARGETS = itargets
         
-
-        for h in _TARGETS:
-            for t in tests:
-                print(f"running {t} for {h}")
+        if "," in tests:
+            for x in tests.split(","):
+                self._TESTS.append(x)
+        else:
+            self._TESTS = tests
+        
+        for t in self._TESTS:
+            print(f"Spawning Tester with Test {t} against host set {self._TARGETS}")
+            _tester = Tester(test=t, targets=self._TARGETS)
+            _tester.run()
 
 class teller(object):
     
@@ -70,24 +63,10 @@ class teller(object):
         def speed(self):
             print("my speed history..")
 
-
-# class route(object):
-#     mtr._mtr(self._TARGETS)
-
-# class ping(object):
-#     ping.ping_runner(self._TARGETS)
-
-# class perf(object):
-#     print("iperf implemented later")
-
-# class speed(object):
-#     speed.speed_runner()
-
 class Pipeline(object):
     def __init__(self):
         self.test = tester()
         self.tell = teller()
-
 
 def run():
     fire.Fire(Pipeline)

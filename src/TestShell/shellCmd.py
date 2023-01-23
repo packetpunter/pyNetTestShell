@@ -1,6 +1,6 @@
 from cmd import Cmd
 import TestConfig
-from Tester import TestSession
+from Tester.TestSession import Tester
 import os
 from datetime import datetime
 import logging
@@ -19,35 +19,15 @@ class shellCmdInteractive(Cmd):
 
     _CONFIG = TestConfig.CONFIG
     _TARGETS= []
-    _TESTER = TestSession.Tester()
-    _base = os.getcwd() + "/" + _CONFIG['default']['base_path']
     _now = datetime.now()
     _fday = _now.strftime("%Y/%m/%d")
     _ftime = _now.strftime("%H:%M")
-    _fpath = _base + "/output/" + _fday + "/"
     _sleep_interval = _CONFIG['default']['sleep_interval_seconds']
-    os.makedirs(_fpath, exist_ok=True)
-
-    _LOGFILE = _fpath + _CONFIG['tester']['slug'] + \
-                "_session_at_" + _ftime + ".testerLog"
-
-    logger = logging.getLogger(_CONFIG['tester']['slug'])
-    logger.setLevel(logging.INFO)
-
-    logfileHandle = logging.FileHandler(_LOGFILE)
-    logfileHandle.setLevel(logging.INFO)
-
-    _formatter = logging.Formatter(
-            "%(asctime)s::%(name)s::%(levelname)s: %(message)s",
-            datefmt = "%Y-%m-%d-T-%I:%M:%S %p")
-    logfileHandle.setFormatter(_formatter)
-
-    logger.addHandler(logfileHandle)
 
     def _logprint(self, msg):
         ''' print to console and log '''
         print(msg)
-        self.logger.debug(msg)
+        
     
     def emptyline(self):
         ''' clear last line so it doesnt repeat on enter '''
@@ -77,13 +57,13 @@ class shellCmdInteractive(Cmd):
         if "all" in actions:
             print(" 'all' test selected. Running all tests once only")
             with tqdm(total=100) as pbar:
-                TestSession.Tester("speed")
+                Tester("speed").run()
                 pbar.update(25)
-                TestSession.Tester("route")
+                Tester("route", self._TARGETS).run()
                 pbar.update(25)
-                TestSession.Tester("ping")
+                Tester("ping", self._TARGETS).run()
                 pbar.update(25)
-                TestSession.Tester("perf")
+                Tester("perf", self._TARGETS).run()
                 pbar.update(25)
             pbar.close()
         
@@ -100,7 +80,7 @@ class shellCmdInteractive(Cmd):
                         pbar.update(_pbar_upp)
                     case _:
                         pbar.update(_pbar_upp)
-                        TestSession.Tester(action)
+                        Tester(test=action, targets=self._TARGETS).run()
         pbar.close()
 
     def do_set(self, user_input):
@@ -151,8 +131,8 @@ class shellCmdInteractive(Cmd):
         ''' open targets file and load that into memory'''
         with open(user_input, 'r') as f:
             for entry in f:
-                if(len(entry.strip()) > 0): _TARGETS.append(entry)
-        self._logprint("Found {} in your targets file!".format(len(_TARGETS)))
+                if(len(entry.strip()) > 0): self._TARGETS.append(entry)
+        self._logprint("Found {} in your targets file!".format(len(self._TARGETS)))
 
     def do_clear_targets(self, user_input):
         ''' clear target list '''

@@ -13,7 +13,7 @@ class TestHistory:
         self._now = datetime.now()
         self._fday = self._now.strftime("%Y/%m/%d")
         self._ftime = self._now.strftime("%H:%M")
-        self._fpath = self._base + self._fday + "/"
+        self._fpath = self._basepath + self._fday + "/"
         os.makedirs(self._fpath, exist_ok=True)
     
     def __get_path(self) -> str:
