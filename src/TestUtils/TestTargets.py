@@ -16,15 +16,17 @@ class ValidAddress(str):
         else:
             try:
                 _temp_target = ip_network(input_address)
-                if(_temp_target.prefixlen == 32): self.validated_ip = _temp_target.network_address
+                if(_temp_target.prefixlen == 32): 
+                    self.validated_ip = str(_temp_target.network_address)
                 else:
-                    _t = _temp_target.network_address + 2
-                    print(f"Target is network. Targeting {_t}")
-                    self.validated_ip = _t
+                    _t = _temp_target.network_address + 1
+                    print(f"Target is network address. Targeting first host")
+                    self.validated_ip = str(_t)
             except ValueError as v:
                 if("host bits" in repr(v)):
-                    print(f"IP was for a CIDR. Must be single host only! Skipping {input_address}!")
-                
+                    print(f"Target was for a CIDR. Setting to first host in network.")
+                    self.validated_ip = str(ip_network(input_address, strict=False).network_address + 1)
+
                 if("does not appear to be" in repr(v)):
                     # source oreilly
                     # source url https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch08s15.html
@@ -39,8 +41,6 @@ class ValidAddress(str):
                             self.validated_ip = resolved_ip
                         except DNSException as e:
                             print(f"{e}")       
-                else:
-                    print(f"Invalid target {input_address}, setting to 127.0.0.1")
             finally:
                 if self.validated_ip == "":
                     print(f"Invalid target {input_address}, setting to localhost")
