@@ -7,7 +7,7 @@ import os
 import csv
 import pandas as pd
 import numpy as np
-from TestUtils import LogEngine 
+from TestUtils.Logging import TestHistory
 import TestConfig
 from TestUtils.TestTargets import ValidAddress
 from Tester.TestSession import Tester

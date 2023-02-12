@@ -14,8 +14,8 @@ from .ping import *
 from .speed import *
 from .mtr import *
 
-from TestUtils.LogEngine import TestHistory, TestType
-from TestUtils.TestResults import TestResultInterface
+from TestUtils.Logging import TestHistory, TestType
+from TestUtils.TestResults import TestResult
 from TestUtils.TestTargets import ValidAddress
 
 class Tester:
