@@ -1,5 +1,4 @@
 from enum import StrEnum, auto
-from abc import ABC, abstractmethod
 import pandas as pd
 from datetime import datetime
 
@@ -10,27 +9,30 @@ class TestType(StrEnum):
     PING = auto()
     OPCMD = auto()
     ALL = str(420)
+    NONE = auto()
 
 
 
-class TestResultInterface(ABC):
+class TestResult():
+    
+    def __init__(self):
+        self._type = TestType.NONE
+        self._result_frame = pd.DataFrame()
+        
+
     @classmethod
-    @abstractmethod
     def from_json(self, result_data: str):
         ...
 
     @classmethod
-    @abstractmethod
     def from_csv(self, result_data: str):
         ...
     
     @classmethod
-    @abstractmethod
     def from_dict(self, result_data: dict):
         ...
     
     @classmethod
-    @abstractmethod
     def from_list(self, result_data: list):
         ...
 
@@ -66,7 +68,6 @@ class TestResultInterface(ABC):
     def time_stamp(self, time_stamp: datetime):
         self._ts = time_stamp.strftime("%Y/%m/%d-T-%H:%M:%S")
 
-    @abstractmethod
     def construct_frame(self, test_data: str) -> pd.DataFrame:
         match str(type(self._raw)):
             case "<class 'PingResult'>":
@@ -76,9 +77,4 @@ class TestResultInterface(ABC):
         the_frame = pd.DataFrame.from_dict(self._raw)
         return the_frame
     
-class PingResult(TestResultInterface):
-    ''' implementor'''
-
-    def construct_frame(self, test_data: str) -> pd.DataFrame:
-        return super().construct_frame(test_data)
     

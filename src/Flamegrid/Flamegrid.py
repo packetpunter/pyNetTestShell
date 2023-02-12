@@ -47,7 +47,7 @@ class teller(object):
             print(f"ping history for {target}..")
 
         def perf(self, target):
-            print("perf history for {target}..")
+            print(f"perf history for {target}..")
 
         def route(self, target):
             print(f"route history for {target}")
