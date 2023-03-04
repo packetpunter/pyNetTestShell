@@ -1,7 +1,7 @@
 import asyncio
 import sys
 import mtrpacket
-from TestUtils.Testing import ValidAddress, TestType, AsyncBackgroundTask, asyncRunner
+from TestUtils.TestTargets import ValidAddress, TestType, AsyncBackgroundTask, asyncRunner
 
 #source https://raw.githubusercontent.com/matt-kimball/mtr-packet-python/master/examples/ping.py
 #
