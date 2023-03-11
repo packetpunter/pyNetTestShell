@@ -1,14 +1,31 @@
-from Tester.oscmd import os_runner
+import subprocess
+from io import StringIO
+
+class os_runner:
+    ''' run cmd_str in os '''
+    def __init__(self, args):
+        self._cmd = []
+        for cmd_data in args.split(" "):
+            self._cmd.append(cmd_data)
+        self._run(self._cmd)
+    
+    def _run(self, command_data) -> str:        
+        output = subprocess.run(command_data, capture_output=True)
+        data = StringIO(output.stdout.decode())
+        print(data.read())
+        self._output = data
+        data.close()
 
 def is_linux() -> bool:
     """ returns false if this is not running on linux"""
     # TODO: convert to decorator
     import os
-    match os.uname().sysname:
+    _systemType = os.uname().sysname
+    match _systemType:
         case 'Linux':
             return True
         case _:
-            print(f"Commands on {os.uname().sysname} operating systems are unsupported. Failing command.")
+            print(f"Commands on {_systemType} operating systems are unsupported. Failing command.")
             return False
 
     

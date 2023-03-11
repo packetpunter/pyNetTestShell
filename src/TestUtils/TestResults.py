@@ -17,6 +17,8 @@ class TestResult():
     
     def __init__(self, test_type: TestType):
         self._test_type = test_type
+        self._src_host = ""
+        self._dest_host = ""
         self._result_frame = pd.DataFrame()
         self._base_frame_dict = {
             "TA_TS": datetime.now().strftime("%Y/%m/%d-T-%H:%M:%S"),
@@ -29,7 +31,7 @@ class TestResult():
             "TR_Speed_Down": -1.0,
             "TR_Speed_Up": -1.0,
             "TR_Speed_Latency": -1.0,
-            "TR_Speed_URL": "none"
+            "TR_Speed_URL": "none",
             "TR_Ping_Avg": 0.0,
             "TR_Ping_Max": 0.0,
             "TR_Ping_Min": 0.0,
@@ -37,7 +39,7 @@ class TestResult():
             "TR_Ping_PctLoss": 0.0
         }
         self._base_frame = pd.DataFrame(data=self._base_frame_dict, index=["TA_TS"])
-        
+        self._frame = self._base_frame.copy()
         self._base_speed = self._base_frame.copy()
         del self._base_speed["TR_Route_HopNum"]
         del self._base_speed["TR_Route_HopMS"]
@@ -85,17 +87,21 @@ class TestResult():
         del self._base_route["TR_Perf_Down"]
         del self._base_route["TR_Perf_Up"]
 
-    @classmethod
-    def from_json(self, result_data: str):
-        ...
+    # @classmethod
+    # def from_list(self, result_data: list):
+    #     for k,v in result_data:
+            
+    # @classmethod
+    # def from_json(self, result_data: str):
+    #     ...
 
-    @classmethod
-    def from_csv(self, result_data: str):
-        ...
+    # @classmethod
+    # def from_csv(self, result_data: str):
+    #     ...
     
-    @classmethod
-    def from_dict(self, result_data: dict):
-        ...
+    # @classmethod
+    # def from_dict(self, result_data: dict):
+    #     ...
     
     @property
     def src_host(self):
@@ -123,33 +129,13 @@ class TestResult():
 
     @property
     def time_stamp(self):
-        return self._ts
+        return self._base_frame["TA_TS"]
 
-    @time_stamp.setter
-    def time_stamp(self, time_stamp: datetime):
-        self._ts = time_stamp.strftime("%Y/%m/%d-T-%H:%M:%S")
-
-    def construct_frame(self, test_data: str) -> pd.DataFrame:
-        final_frame = 0
-
-        match self._test_type:
-            case TestType.PERF:
-                final_frame = self._base_perf.copy()
-                # TODO: Fill the frame with iperf data, using last two lines of [sender, receiver]
-                # iperf has a -J option for json
-
-            case TestType.PING:
-                final_frame = self._base_ping.copy()
-                # TODO: Fill the frame with ping data
-
-            case TestType.ROUTE:
-                final_frame = self._base_route.copy()
-                # TODO: Fill the frame with route hops
-
-            case TestType.SPEED:
-                final_frame = self._base_speed.copy()
-                # TODO: Fill the frame with Speedtest results
-
-        return final_frame
+    def __repr__(self):
+        return self._frame.to_csv(header=False)
     
+    def update(self, data):
+        ...
+        #TODO: add update frame logic so later classes dont have to use pd.DataFrames
+        
     
