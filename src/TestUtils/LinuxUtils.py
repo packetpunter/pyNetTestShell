@@ -4,7 +4,7 @@ def is_linux() -> bool:
     """ returns false if this is not running on linux"""
     # TODO: convert to decorator
     import os
-    match os.uname():
+    match os.uname().sysname:
         case 'Linux':
             return True
         case _:
