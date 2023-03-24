@@ -1,6 +1,7 @@
 from enum import StrEnum, auto
 import pandas as pd
 from datetime import datetime
+from TestUtils.TestTargets import ValidAddress
 
 class TestType(StrEnum):
     PERF = auto()
@@ -137,5 +138,24 @@ class TestResult():
     def update(self, data):
         ...
         #TODO: add update frame logic so later classes dont have to use pd.DataFrames
-        
+
+
+class TestResult2():
+    ''' this class will have the base dicts for each test type, '''
+    ''' it will also create the frame from the test data'''
     
+    def __init__(self, test_type: TestType):
+        self._test_type = test_type
+        self._source_address = ValidAddress("127.0.0.1")
+        self._dest_address = ValidAddress("127.0.0.1")
+        self._ping_result = {
+            "Timestamp": [],
+            "Source": [],
+            "Destination": [], 
+            "Avg": [],
+            "Max": [],
+            "Loss": []
+        }
+
+        self._
+        self._result_frame = pd.DataFrame()
