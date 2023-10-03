@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
+=======
+SHELL := /bin/bash
+>>>>>>> Stashed changes
 .DEFAULT_GOAL := build
 
 init:
