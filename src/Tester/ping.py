@@ -1,4 +1,5 @@
 from io import StringIO
+from pandas import DataFrame
 import subprocess
 from TestUtils.TestObjects import TestResult
 from icmplib import ping, traceroute, multiping, resolve
@@ -27,7 +28,7 @@ def _tracerouter(targetList, logging_enabled=True):
         hop_list = traceroute(host)
         parsed_results = _zparse_trace(host, hop_list)
         results_list.append(parsed_results)
-    return parsed_results
+    return results_list
 
 def parse_ping(ping_result_list) -> list:
     result_list = []
@@ -44,15 +45,15 @@ def parse_ping(ping_result_list) -> list:
         result_list.append(new_result)
     return result_list
 
-def _zparse_trace(host, hop_list) -> Dataframe:
+def _zparse_trace(host, hop_list) -> DataFrame:
     trace_template = TestResult("route")
     total_jitter = 0.0
     total_packet_loss = 0
-    highest_rtt_hop = {"address": "", "rtt": 0.0} 
+    highest_rtt_hop = dict(address="", rtt=0.0)
     for theHop in hop_list: 
         # print("***Hop: {}".format(theHop))
         if theHop.avg_rtt > highest_rtt_hop["rtt"]:
-            highest_loss_hop = {theHop.address, theHop.avg_rtt}
+            highest_rtt_hop = dict(address=theHop.address, rtt=theHop.avg_rtt)
         total_jitter =+ theHop.jitter
         total_rtt =+ theHop.avg_rtt
     
@@ -61,5 +62,5 @@ def _zparse_trace(host, hop_list) -> Dataframe:
     trace_frame["DST"] = host
     trace_frame["Route_AvgJitter"] = total_jitter / len(hop_list)
     trace_frame["Route_AvgRtt"] = total_rtt / len(hop_list)
-    trace_frame["Route_HighestLossHop"] = highest_rtt_hop["address"]
+    trace_frame["Route_HighestLossHop"] = highest_rtt_hop["address"] + " responded in " + str(highest_rtt_hop["rtt"]) + "ms"
     return trace_frame

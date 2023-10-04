@@ -76,12 +76,12 @@ class shellCmdInteractive(Cmd):
         action = actions.pop(0)
         match action:
             case 'target'|'targets':
-                self._logprint("Targets cleared and reset via set")
+                #self._logprint("Targets cleared and reset via set")
                 _targs = []
                 for t in actions:
                     _targs.append(t)
                 self._TARGETS = _targs.copy()
-                self._logprint(f"set new targets list that is {self._TARGETS} entries long")
+                #self._logprint(f"set new targets list that is {self._TARGETS} entries long")
             case 'sleep'|'sleep_interval':
                 try:
                     _nsi = int(actions[0])

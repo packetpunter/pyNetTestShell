@@ -92,7 +92,6 @@ class TestResult():
         del self._base_route["Perf_Up"]
         
     def generate_frame(self) -> pd.DataFrame:
-        print("TEST_OBJECTS: generating frame for {a}".replace("{a}", self._test_type))
         match(self._test_type):
             case TestType.PING:
                 return self._base_ping

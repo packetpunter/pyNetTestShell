@@ -2,18 +2,14 @@
 An interactive python shell to test the network using external commands as well as some python libs for network performance
 
 ## Requirements
-Please have `mtr, iperf3, ping` installed and in the path of the user running the script.
-
-[A medium post on how to install mtr via brew on macos](https://medium.com/macos-sh/mtr-my-traceroute-replacement-7827bd8efa42)
-
-For Windows, I recommend running WSL2 with Ubuntu, then installing and running mtr + this script from there.
-
-[Installing Ubuntu on WSL2 on Windows 10](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview)
+None - this is pure Python3, thanks to the likes of the tabulate project and the icmplib project.
 
 ## Behavior
 The app is interactive, and upon launch, creates a new logfile. 
 
 The logfile is located in ```output/$YEAR/$MONTH/$DAY``` and the file is named according to data in ```Config.py```, using the timestamp for the file name.
+
+Once in, you have a shell where you can run pings, traceroutes, speedtests with logging to disk and some analysis.
 
 
 ## Usage
@@ -27,45 +23,84 @@ python3 -m TestShell
 ```
 ##### Sample Output
 ```bash
-Welcome to the Network Tester Interactive v2.0a0 app to test your network!
+Welcome to the Network Tester Interactive v2.1.0 app to test your network!
 
 Type ? to list commands.
  For questions, please contact the administrator who granted you this access.
 
 
-net_test> set targets 10.2.0.1 10.2.0.250
-Targets cleared and reset via set
-adding target 10.2.0.1
-adding target 10.2.0.250
-net_test> run ping sleep10 route sleep60 ping
-Sending 10 pings to 10.2.0.1
-PING: 10 packets transmitted, 10 received, 0% packet loss, time 9013ms
-PING: rtt min/avg/max/mdev = 1.120/1.523/3.250/0.603 ms
-Sending 10 pings to 10.2.0.250
-PING: 10 packets transmitted, 10 received, 0% packet loss, time 9298ms
-PING: rtt min/avg/max/mdev = 0.600/0.838/1.351/0.195 ms
-Sleeping for 10 seconds
-Traceroute invoked for 10.2.0.1
-Traceroute: Hop# 1 IP 172.22.96.1 Loss 0.0% Avg Resp 0.35ms
-Traceroute: Hop# 2 IP 10.2.0.1 Loss 0.0% Avg Resp 1.48ms
-Traceroute invoked for 10.2.0.250
-Traceroute: Hop# 1 IP 172.22.96.1 Loss 0.0% Avg Resp 0.4ms
-Traceroute: Hop# 2 IP 10.2.0.250 Loss 0.0% Avg Resp 0.82ms
-Traceroute completed
-Sleeping for 1 minute
-Sending 10 pings to 10.2.0.1
-PING: 10 packets transmitted, 10 received, 0% packet loss, time 9014ms
-PING: rtt min/avg/max/mdev = 1.000/1.340/1.664/0.205 ms
-Sending 10 pings to 10.2.0.250
-PING: 10 packets transmitted, 10 received, 0% packet loss, time 9399ms
-PING: rtt min/avg/max/mdev = 0.480/0.827/1.209/0.205 ms
-net_test>exit
+net_test> set target 1.1.1.1 4.4.4.4 8.8.8.8 reddit.com nmsu.edu
+net_test> run route ping
+TestSession: Begin route testing
+
+TestSession: TEST route:: RESULTS 
+╒════╤═══════════════════════╤═══════╤═════════╤═══════════════════╤════════════════╤═══════════════════════════════╕
+│    │ TS                    │ SRC   │ DST     │   Route_AvgJitter │   Route_AvgRtt │ Route_HighestLossHop          │
+╞════╪═══════════════════════╪═══════╪═════════╪═══════════════════╪════════════════╪═══════════════════════════════╡
+│ TS │ 2023/10/04-T-17:12:42 │ self  │ 1.1.1.1 │          0.502167 │        2.02133 │ 1.1.1.1 responded in 24.256ms │
+╘════╧═══════════════════════╧═══════╧═════════╧═══════════════════╧════════════════╧═══════════════════════════════╛
+TestSession: TEST route:: RESULTS 
+╒════╤═══════════════════════╤═══════╤═════════╤═══════════════════╤════════════════╤════════════════════════════════════╕
+│    │ TS                    │ SRC   │ DST     │   Route_AvgJitter │   Route_AvgRtt │ Route_HighestLossHop               │
+╞════╪═══════════════════════╪═══════╪═════════╪═══════════════════╪════════════════╪════════════════════════════════════╡
+│ TS │ 2023/10/04-T-17:13:23 │ self  │ 4.4.4.4 │            0.0839 │         2.0752 │ 96.110.44.29 responded in 21.093ms │
+╘════╧═══════════════════════╧═══════╧═════════╧═══════════════════╧════════════════╧════════════════════════════════════╛
+TestSession: TEST route:: RESULTS 
+╒════╤═══════════════════════╤═══════╤═════════╤═══════════════════╤════════════════╤══════════════════════════════════════╕
+│    │ TS                    │ SRC   │ DST     │   Route_AvgJitter │   Route_AvgRtt │ Route_HighestLossHop                 │
+╞════╪═══════════════════════╪═══════╪═════════╪═══════════════════╪════════════════╪══════════════════════════════════════╡
+│ TS │ 2023/10/04-T-17:13:25 │ self  │ 8.8.8.8 │         0.0953571 │        1.43621 │ 108.170.254.65 responded in 20.346ms │
+╘════╧═══════════════════════╧═══════╧═════════╧═══════════════════╧════════════════╧══════════════════════════════════════╛
+TestSession: TEST route:: RESULTS 
+╒════╤═══════════════════════╤═══════╤════════════╤═══════════════════╤════════════════╤════════════════════════════════════╕
+│    │ TS                    │ SRC   │ DST        │   Route_AvgJitter │   Route_AvgRtt │ Route_HighestLossHop               │
+╞════╪═══════════════════════╪═══════╪════════════╪═══════════════════╪════════════════╪════════════════════════════════════╡
+│ TS │ 2023/10/04-T-17:13:27 │ self  │ reddit.com │         0.0225385 │        1.47269 │ 96.110.44.29 responded in 20.481ms │
+╘════╧═══════════════════════╧═══════╧════════════╧═══════════════════╧════════════════╧════════════════════════════════════╛
+TestSession: TEST route:: RESULTS 
+╒════╤═══════════════════════╤═══════╤══════════╤═══════════════════╤════════════════╤═══════════════════════════════════╕
+│    │ TS                    │ SRC   │ DST      │   Route_AvgJitter │   Route_AvgRtt │ Route_HighestLossHop              │
+╞════╪═══════════════════════╪═══════╪══════════╪═══════════════════╪════════════════╪═══════════════════════════════════╡
+│ TS │ 2023/10/04-T-17:13:29 │ self  │ nmsu.edu │        0.00386667 │        1.10933 │ 10.123.128.1 responded in 19.11ms │
+╘════╧═══════════════════════╧═══════╧══════════╧═══════════════════╧════════════════╧═══════════════════════════════════╛
+TestSession: Begin ping tests
+TestSession: TEST ping:: RESULTS 
+╒════╤═══════════════════════╤═══════╤══════════╤════════════╤════════════╤════════════╤════════════════╕
+│    │ TS                    │ SRC   │ DST      │   Ping_Avg │   Ping_Max │   Ping_Min │   Ping_PctLoss │
+╞════╪═══════════════════════╪═══════╪══════════╪════════════╪════════════╪════════════╪════════════════╡
+│ TS │ 2023/10/04-T-17:14:35 │ self  │ nmsu.edu │      17.14 │     21.256 │     15.118 │              0 │
+╘════╧═══════════════════════╧═══════╧══════════╧════════════╧════════════╧════════════╧════════════════╛
+TestSession: TEST ping:: RESULTS 
+╒════╤═══════════════════════╤═══════╤══════════╤════════════╤════════════╤════════════╤════════════════╕
+│    │ TS                    │ SRC   │ DST      │   Ping_Avg │   Ping_Max │   Ping_Min │   Ping_PctLoss │
+╞════╪═══════════════════════╪═══════╪══════════╪════════════╪════════════╪════════════╪════════════════╡
+│ TS │ 2023/10/04-T-17:14:35 │ self  │ nmsu.edu │      17.14 │     21.256 │     15.118 │              0 │
+╘════╧═══════════════════════╧═══════╧══════════╧════════════╧════════════╧════════════╧════════════════╛
+TestSession: TEST ping:: RESULTS 
+╒════╤═══════════════════════╤═══════╤══════════╤════════════╤════════════╤════════════╤════════════════╕
+│    │ TS                    │ SRC   │ DST      │   Ping_Avg │   Ping_Max │   Ping_Min │   Ping_PctLoss │
+╞════╪═══════════════════════╪═══════╪══════════╪════════════╪════════════╪════════════╪════════════════╡
+│ TS │ 2023/10/04-T-17:14:35 │ self  │ nmsu.edu │      17.14 │     21.256 │     15.118 │              0 │
+╘════╧═══════════════════════╧═══════╧══════════╧════════════╧════════════╧════════════╧════════════════╛
+TestSession: TEST ping:: RESULTS 
+╒════╤═══════════════════════╤═══════╤══════════╤════════════╤════════════╤════════════╤════════════════╕
+│    │ TS                    │ SRC   │ DST      │   Ping_Avg │   Ping_Max │   Ping_Min │   Ping_PctLoss │
+╞════╪═══════════════════════╪═══════╪══════════╪════════════╪════════════╪════════════╪════════════════╡
+│ TS │ 2023/10/04-T-17:14:35 │ self  │ nmsu.edu │      17.14 │     21.256 │     15.118 │              0 │
+╘════╧═══════════════════════╧═══════╧══════════╧════════════╧════════════╧════════════╧════════════════╛
+TestSession: TEST ping:: RESULTS 
+╒════╤═══════════════════════╤═══════╤══════════╤════════════╤════════════╤════════════╤════════════════╕
+│    │ TS                    │ SRC   │ DST      │   Ping_Avg │   Ping_Max │   Ping_Min │   Ping_PctLoss │
+╞════╪═══════════════════════╪═══════╪══════════╪════════════╪════════════╪════════════╪════════════════╡
+│ TS │ 2023/10/04-T-17:14:35 │ self  │ nmsu.edu │      17.14 │     21.256 │     15.118 │              0 │
+╘════╧═══════════════════════╧═══════╧══════════╧════════════╧════════════╧════════════╧════════════════╛
+net_test> 
+net_test> exit
+ *** Goodbye ***!
 ```
 
 #### One Off Execution
 
 ```bash
 python3 -m Flamegrid test route 1.1.1.1
-```
-
 ```
