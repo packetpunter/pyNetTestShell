@@ -23,9 +23,12 @@ class TestHistory:
     #def append_raw()
     
     def append(self, host: str, message: str, test_type: str, date: str) -> None:
-        ''' convert log message to db entry '''\
-        ''' TODO: convert from Print to remove dbl print '''
+        ''' convert log message to db entry '''
+        #TODO: convert from print statement in Logging->TestHistory.append() to permament storage for query
         print(f"HISTORY LOGGER::: {message} from {host} for {TestType(test_type)}")
 
     def query(self, host, query_date, test_type):
+        '''retreive log from storage'''
+
+        #TODO: implement database for logging in Logging->TestHistory.query() from permanent storage
         print(f'HISTORY ENTRY:: {host} for date {query_date} with test {TestType(test_type)}')

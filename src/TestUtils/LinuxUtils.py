@@ -19,13 +19,13 @@ class os_runner:
 def is_linux() -> bool:
     """ returns false if this is not running on linux"""
     # TODO: convert to decorator
-    import os
-    _systemType = os.uname().sysname
-    match _systemType:
-        case 'Linux':
+    from sys import platform
+
+    match platform:
+        case 'linux':
             return True
         case _:
-            print(f"Commands on {_systemType} operating systems are unsupported. Failing command.")
+            print(f"Commands on {platform} operating systems are unsupported. Failed.")
             return False
 
     

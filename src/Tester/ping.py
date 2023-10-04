@@ -1,53 +1,65 @@
 from io import StringIO
 import subprocess
-from TestUtils.TestResults import TestResult
+from TestUtils.TestObjects import TestResult
+from icmplib import ping, traceroute, multiping, resolve
 
-def ping_runner(targetList):
+def ping_runner(targetList) -> list:
     _TARGETS = targetList
     results = _pinger(_TARGETS)
     return results
 
-def _pinger(targets) -> TestResult:
-    msgs = []
-    for host in targets:
-        the_host = host.strip()
-        ping_result = subprocess.run(
-                ["ping","-c","10","-i","1","-n","-q", the_host],
-                capture_output=True)
-        ping_lines = StringIO(ping_result.stdout.decode()).getvalue().split()
-        t_names = ping_lines[-4].split("/")
-        t_vals = ping_lines[-2].split("/")
-        
-        for name in t_names:
-            nameIdx = t_names.index(name)
-            new_name = ""
-            match(name):
-                case "min":
-                    new_name = "TR_Ping_Min"
-                case "avg":
-                    new_name = "TR_Ping_Avg"
-                case "max":
-                    new_name = "TR_Ping_Max"
-                case "mdev":
-                    new_name = "TR_Ping_StdDev"
-            t_names.remove(name)
-            t_names.insert(nameIdx, new_name)
-        
-        t_names.append("TR_Ping_PctLoss")
-        t_vals.append(ping_lines[10])
+def traceroute_runner(targetList):
+    _TARGETS = targetList
+    results = _tracerouter(_TARGETS)
+    return results
 
-        rl = dict(zip(t_names, t_vals))
-        
-        # TODO: move this into the TestResult class
-        result_frame = TestResult("ping")._frame
-        result_frame["TA_SRC"] = "self"
-        result_frame["TA_DST"] = the_host
-        result_frame["TR_Ping_Min"] = rl["TR_Ping_Min"]
-        result_frame["TR_Ping_Max"] = rl["TR_Ping_Max"]
-        result_frame["TR_Ping_Min"] = rl["TR_Ping_Avg"]
-        result_frame["TR_Ping_StdDev"] = rl["TR_Ping_StdDev"]
-        result_frame["TR_Ping_PctLoss"] = rl["TR_Ping_PctLoss"]
+def _pinger(targetList, logging_enabled=True) -> list:
+    result_list = []
+    for host in targetList:
+        ping_result = ping(host, count=10, interval=1, privileged=True)
+        result_list.append(tuple((host, ping_result)))
+    results = parse_ping(result_list)
+    return results
 
-        msgs.append(f"PING: Pinging host {the_host}\n")
-        msgs.append("PING: {} {}\n".format(_x[-3], _x[-2]))
-        return msgs
+def _tracerouter(targetList, logging_enabled=True):
+    results_list = []
+    for host in targetList:
+        hop_list = traceroute(host)
+        parsed_results = _zparse_trace(host, hop_list)
+        results_list.append(parsed_results)
+    return parsed_results
+
+def parse_ping(ping_result_list) -> list:
+    result_list = []
+    ping_template = TestResult("ping")
+    for result in ping_result_list:
+        (target, ping_result) = result
+        new_result = ping_template.generate_frame()
+        new_result["SRC"] = "self"
+        new_result["DST"] = target
+        new_result["Ping_Min"] = ping_result.min_rtt
+        new_result["Ping_Max"] = ping_result.max_rtt
+        new_result["Ping_Avg"] = ping_result.avg_rtt
+        new_result["Ping_PctLoss"] = ping_result.packet_loss
+        result_list.append(new_result)
+    return result_list
+
+def _zparse_trace(host, hop_list) -> Dataframe:
+    trace_template = TestResult("route")
+    total_jitter = 0.0
+    total_packet_loss = 0
+    highest_rtt_hop = {"address": "", "rtt": 0.0} 
+    for theHop in hop_list: 
+        # print("***Hop: {}".format(theHop))
+        if theHop.avg_rtt > highest_rtt_hop["rtt"]:
+            highest_loss_hop = {theHop.address, theHop.avg_rtt}
+        total_jitter =+ theHop.jitter
+        total_rtt =+ theHop.avg_rtt
+    
+    trace_frame = trace_template.generate_frame()
+    trace_frame["SRC"] = "self"
+    trace_frame["DST"] = host
+    trace_frame["Route_AvgJitter"] = total_jitter / len(hop_list)
+    trace_frame["Route_AvgRtt"] = total_rtt / len(hop_list)
+    trace_frame["Route_HighestLossHop"] = highest_rtt_hop["address"]
+    return trace_frame

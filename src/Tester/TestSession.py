@@ -1,10 +1,4 @@
-import pandas as pd
-import os
-
-import dns.resolver
-
 from re import search
-from datetime import datetime
 from yaml import safe_load
 from ipaddress import ip_network
 
@@ -12,11 +6,11 @@ import TestConfig
 from .perf import * 
 from .ping import *
 from .speed import *
-from .mtr import *
+#from .mtr import *
 
 from TestUtils.Logging import TestHistory, TestType
-from TestUtils.TestResults import TestResult
-from TestUtils.TestTargets import ValidAddress
+from TestUtils.TestObjects import TestResult
+from TestUtils.TestObjects import ValidAddress
 
 class Tester:
     ''' Top level python object to create the \n'''\
@@ -48,9 +42,9 @@ class Tester:
             case 'speed':
                 self._logprint("Begin speedtest")
                 results = speed_runner()
-            case 'route'|'routes':
+            case 'route'|'routes'|'traceroute'|'mtr'|'trace':
                 self._logprint("Begin route testing")
-                results = trace_runner(targets)
+                results = traceroute_runner(targets)
                 for r in results:
                     self._logprint(f"TEST {test}:: RESULTS {r}")
                 results = []

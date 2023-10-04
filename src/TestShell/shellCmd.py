@@ -1,11 +1,8 @@
 from cmd import Cmd
 import TestConfig
 from Tester.TestSession import Tester
-import os
 from datetime import datetime
-import logging
 from time import sleep
-from tqdm import tqdm
 
 class shellCmdInteractive(Cmd):
     
@@ -54,34 +51,21 @@ class shellCmdInteractive(Cmd):
         if(len(actions) == 0):
             self._logprint("do_run: no actions specified")
             return
+        
         if "all" in actions:
             print(" 'all' test selected. Running all tests once only")
-            with tqdm(total=100) as pbar:
-                Tester("speed").run()
-                pbar.update(25)
-                Tester("route", self._TARGETS).run()
-                pbar.update(25)
-                Tester("ping", self._TARGETS).run()
-                pbar.update(25)
-                Tester("perf", self._TARGETS).run()
-                pbar.update(25)
-            pbar.close()
+            Tester("speed").run()
+            Tester("route", self._TARGETS).run()
+            Tester("ping", self._TARGETS).run()
+            Tester("perf", self._TARGETS).run()
+            actions = [] #clear actions list so nothing else runs
         
-            actions = []
-        with tqdm(total=100) as pbar:
-            if len(actions) >= 1:
-                _pbar_upp = round(float(1/len(actions)*100))
-            else:
-                _pbar_upp = 1
-            for action in actions: #loop for multiple run commands, e.g. 'run ping route'
-                match action:
-                    case 'sleep'|'wait':
-                        self._sleep()
-                        pbar.update(_pbar_upp)
-                    case _:
-                        pbar.update(_pbar_upp)
-                        Tester(test=action, targets=self._TARGETS).run()
-        pbar.close()
+        for action in actions: #loop for multiple run commands, e.g. 'run ping route'
+            match action:
+                case 'sleep'|'wait':
+                    self._sleep()
+                case _:
+                    Tester(test=action, targets=self._TARGETS).run()
 
     def do_set(self, user_input):
         ''' set for properties target,targets '''
@@ -110,7 +94,7 @@ class shellCmdInteractive(Cmd):
                 self._logprint("Attempted to set unknown property {} to val {}".format(action, actions))
 
     def do_show(self, user_input):
-        ''' wrap around get for properties target, targets, lofile'''
+        ''' wrap around get for properties target, targets, logfile'''
         self.do_get(user_input)
 
     def do_get(self, user_input):

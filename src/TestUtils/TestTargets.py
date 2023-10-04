@@ -15,6 +15,7 @@ class ValidAddress(str):
             self.validated_ip = input_address
         else:
             try:
+                # TODO: add ipv6 support
                 _temp_target = ip_network(input_address)
                 if(_temp_target.prefixlen == 32): 
                     self.validated_ip = str(_temp_target.network_address)
