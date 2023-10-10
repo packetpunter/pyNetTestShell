@@ -1,7 +1,7 @@
 from enum import StrEnum, auto
 import pandas as pd
 from datetime import datetime
-from TestUtils.TestTargets import ValidAddress
+from TestUtils.TestObjects import ValidAddress
 
 class TestType(StrEnum):
     PERF = auto()

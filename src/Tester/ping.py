@@ -1,6 +1,4 @@
-from io import StringIO
 from pandas import DataFrame
-import subprocess
 from TestUtils.TestObjects import TestResult
 from icmplib import ping, traceroute, multiping, resolve
 

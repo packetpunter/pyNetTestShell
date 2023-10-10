@@ -1,6 +1,3 @@
-from re import search
-from yaml import safe_load
-from ipaddress import ip_network
 from tabulate import tabulate
 
 import TestConfig

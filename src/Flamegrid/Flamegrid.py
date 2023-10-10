@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 from TestUtils.Logging import TestHistory
 import TestConfig
-from TestUtils.TestTargets import ValidAddress
+from TestUtils.TestObjects import ValidAddress
 from Tester.TestSession import Tester
 
 _CONFIG = TestConfig.CONFIG
