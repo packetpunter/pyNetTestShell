@@ -7,12 +7,11 @@
 - TestUtils package for providing centralized logging
 - Flamegrid package for providing an alternative to the net_shell, for one time commands
 - LinuxUtils package that provides various, basic-bitch status helper functions. lots of stuff to be improved there.
+- icmplib functionality pulled into Tester so no external binaries are required
 
 ### Changed
-- moved a lot of logging functionality out of TestSession into centralized TestUtils.LogEngine
-- created target validation as TestUtils.TestTargets using custom objects
-- attempts first TestUtils.TestResult object for standard test result objects
-    - created basic dataframe structure for each test type
+- created target validation as TestObjects.TestTargets using custom objects
+- creates TestResult dataframe for each test result
 
 ## 2.1.0
 
