@@ -1,13 +1,18 @@
 [build-system]
-requires = ["setuptools","pyyaml"]
+requires = ["setuptools","setuptools-scm","pyyaml"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyNetTestShell"
 description = "An interactive python shell to test the network."
+authors = [
+    {name = "John Bell", email = "blue@jbell.xyz"},
+]
 readme = "README.md"
-requires-python = ">=3.10"
-version = "2.1.0"
+requires-python = ">=3.11"
+version = "2.2.0"
+keywords = [ "traceroute", "ping", "python3", "network-testing"]
+license = { text = "GPL-3" }
 classifiers = [
     "Development Status::5 Production/Stable",
     "Environment::Console",
@@ -22,8 +27,22 @@ dependencies = [
     "dnspython",
     "PyYAML",
     "pandas",
-    "speedtest-cli"
+    "speedtest-cli",
+    "numpy",
+    "fire",
+    "altgraph",
+    "icmplib",
+    "numpy",
+    "pandas",
+    "python-dateutil",
+    "pytz",
+    "six",
+    "tabulate",
+    "termcolor",
 ]
 
 [project.urls]
 "Homepage" = "https://github.com/packetpunter/pyNetTestShell"
+
+[project.scripts]
+TestShell = "TestShell.shellCmd:shellCmdInteractive.cmdLoop"
