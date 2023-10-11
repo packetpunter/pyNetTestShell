@@ -7,7 +7,7 @@ None - this is pure Python3, thanks to the likes of the tabulate project and the
 ## Behavior
 The app is interactive, and upon launch, creates a new logfile. 
 
-The logfile is located in ```output/$YEAR/$MONTH/$DAY``` and the file is named according to data in ```Config.py```, using the timestamp for the file name.
+The logfile is located in ```$(CWD)/network-testing/$YEAR/$MONTH/$DAY``` and the file is named according to data in ```Config.py```, using the timestamp for the file name.
 
 Once in, you have a shell where you can run pings, traceroutes, speedtests with logging to disk and some analysis.
 
@@ -17,6 +17,8 @@ Once in, you have a shell where you can run pings, traceroutes, speedtests with 
 This application has two ways to interface with it. There is an interactive shell called TestShell, and an execuble-like mode for one-off testing via the module "Flamegrid"
 
 #### Interactive Shell
+*NOTE:* This requires Sudo privileges on Linux/MacOS, but not Windows.
+
 ```bash
 sudo python3 -m TestShell
 
