@@ -15,7 +15,7 @@ class shellCmdInteractive(Cmd):
 
 
     _CONFIG = TestConfig.CONFIG
-    _TARGETS= []
+    _TARGETS= _CONFIG['default']['targets']
     _now = datetime.now()
     _fday = _now.strftime("%Y/%m/%d")
     _ftime = _now.strftime("%H:%M")
@@ -44,9 +44,7 @@ class shellCmdInteractive(Cmd):
         '''\n e.g run ping \n'''\
         ''' You can run these:\n'''\
         ''' speed, route/routes, ping/pings,\n'''\
-        ''' sleep5m/wait5m, sleep10/wait10,\n'''\
-        ''' sleep60/wait60/sleep1m/wait1m\n'''\
-        ''' sleep1h/wait1h, sleep30m/wait30m'''
+        ''' sleep'''
         actions = verbage.split()
         if(len(actions) == 0):
             return
@@ -67,7 +65,7 @@ class shellCmdInteractive(Cmd):
                     Tester(test=action, targets=self._TARGETS).run()
 
     def do_set(self, user_input):
-        ''' set for properties target,targets '''
+        ''' set for properties target(s), sleep_interval '''
         actions = user_input.split()
         if(len(actions) == 0):
             return
@@ -85,12 +83,12 @@ class shellCmdInteractive(Cmd):
                 except ValueError:
                     self._userprint(f"Invalid entry {type(_nsi)}:{_nsi}")
                 finally:
-                    self._userprint(f"set new sleep interval to {_nsi}")
+                    self._userprint(f"set new sleep interval to {_nsi} seconds")
             case default:
                 self._userprint("Attempted to set unknown property {} to val {}".format(action, actions))
 
     def do_show(self, user_input):
-        ''' wrap around get for properties target, targets, logfile'''
+        ''' wrap around get for properties target, targets'''
         self.do_get(user_input)
 
     def do_get(self, user_input):
@@ -100,8 +98,6 @@ class shellCmdInteractive(Cmd):
             match p:
                 case 'target'|'targets':
                     self._userprint(self._TARGETS)
-                case 'logfile':
-                    self._userprint(self._LOGFILE)
                 case 'sleep'|'sleep_interval':
                     self._userprint(self._sleep_interval)
                 case default:

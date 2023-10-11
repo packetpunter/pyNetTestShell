@@ -1,7 +1,7 @@
 ---
 shell:
   name: "Network Tester Interactive"
-  version: "2.2.0"
+  version: "2.2.1"
   slug: "net_test"
   description: >
     A tool to begin testing your network, with

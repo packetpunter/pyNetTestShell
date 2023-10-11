@@ -25,7 +25,7 @@ sudo python3 -m TestShell
 ```
 ##### Sample Output
 ```bash
-Welcome to the Network Tester Interactive v2.2.0 app to test your network!
+Welcome to the Network Tester Interactive v2.2.1 app to test your network!
 
 Type ? to list commands.
  For questions, please contact the administrator who granted you this access.
