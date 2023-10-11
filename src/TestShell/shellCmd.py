@@ -21,7 +21,7 @@ class shellCmdInteractive(Cmd):
     _ftime = _now.strftime("%H:%M")
     _sleep_interval = _CONFIG['default']['sleep_interval_seconds']
 
-    def _logprint(self, msg):
+    def _userprint(self, msg):
         ''' print to console and log '''
         print(msg)
         
@@ -35,7 +35,7 @@ class shellCmdInteractive(Cmd):
 
     def do_exit(self, user_input):
         ''' exit '''
-        self._logprint(" *** Goodbye ***!")
+        self._userprint(" *** Goodbye ***!")
         return True
 
 
@@ -49,11 +49,10 @@ class shellCmdInteractive(Cmd):
         ''' sleep1h/wait1h, sleep30m/wait30m'''
         actions = verbage.split()
         if(len(actions) == 0):
-            self._logprint("do_run: no actions specified")
             return
         
         if "all" in actions:
-            print(" 'all' test selected. Running all tests once only")
+            self._userprint(" 'all' test selected. Running all tests once only")
             Tester("speed").run()
             Tester("route", self._TARGETS).run()
             Tester("ping", self._TARGETS).run()
@@ -71,27 +70,24 @@ class shellCmdInteractive(Cmd):
         ''' set for properties target,targets '''
         actions = user_input.split()
         if(len(actions) == 0):
-            self._logprint("do_set: no actions specified")
             return
         action = actions.pop(0)
         match action:
             case 'target'|'targets':
-                #self._logprint("Targets cleared and reset via set")
                 _targs = []
                 for t in actions:
                     _targs.append(t)
                 self._TARGETS = _targs.copy()
-                #self._logprint(f"set new targets list that is {self._TARGETS} entries long")
             case 'sleep'|'sleep_interval':
                 try:
                     _nsi = int(actions[0])
                     self._sleep_interval = _nsi
                 except ValueError:
-                    self._logprint(f"Invalid entry {type(_nsi)}:{_nsi}")
+                    self._userprint(f"Invalid entry {type(_nsi)}:{_nsi}")
                 finally:
-                    self._logprint(f"set new sleep interval to {_nsi}")
+                    self._userprint(f"set new sleep interval to {_nsi}")
             case default:
-                self._logprint("Attempted to set unknown property {} to val {}".format(action, actions))
+                self._userprint("Attempted to set unknown property {} to val {}".format(action, actions))
 
     def do_show(self, user_input):
         ''' wrap around get for properties target, targets, logfile'''
@@ -103,20 +99,20 @@ class shellCmdInteractive(Cmd):
         for p in requested_properties:
             match p:
                 case 'target'|'targets':
-                    print(self._TARGETS)
+                    self._userprint(self._TARGETS)
                 case 'logfile':
-                    print(self._LOGFILE)
+                    self._userprint(self._LOGFILE)
                 case 'sleep'|'sleep_interval':
-                    print(self._sleep_interval)
+                    self._userprint(self._sleep_interval)
                 case default:
-                    self._logprint("Can't get unknown property {}".format(p))
+                    self._userprint("Can't get unknown property {}".format(p))
 
     def do_open_targets(self, user_input):
         ''' open targets file and load that into memory'''
         with open(user_input, 'r') as f:
             for entry in f:
                 if(len(entry.strip()) > 0): self._TARGETS.append(entry)
-        self._logprint("Found {} in your targets file!".format(len(self._TARGETS)))
+        self._userprint("Found {} in your targets file!".format(len(self._TARGETS)))
 
     def do_clear_targets(self, user_input):
         ''' clear target list '''
@@ -124,7 +120,7 @@ class shellCmdInteractive(Cmd):
 
     def _sleep(self):
         ''' invoke sleep for default sleep interval in seconds. can be changed with 'set'.'''
-        self._logprint(f"sleep invoked for {self._sleep_interval} seconds....\n")
+        self._userprint(f"sleep invoked for {self._sleep_interval} seconds....\n")
         for i in range(self._sleep_interval):
             sleep(1)
 

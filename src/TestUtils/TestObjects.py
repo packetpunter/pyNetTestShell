@@ -6,6 +6,7 @@ from ipaddress import ip_network
 from re import search
 import dns.resolver
 from dns.exception import DNSException
+from tabulate import tabulate 
 
 class TestType(StrEnum):
     PERF = auto()
@@ -23,7 +24,6 @@ class TestResult():
         self._test_type = test_type
         self._src_host = ""
         self._dest_host = ""
-        self._result_frame = pd.DataFrame()
         self._base_frame_dict = { #base frame for all tests
             "TS": datetime.now().strftime("%Y/%m/%d-T-%H:%M:%S"),
             "SRC": "none",
@@ -94,13 +94,14 @@ class TestResult():
     def generate_frame(self) -> pd.DataFrame:
         match(self._test_type):
             case TestType.PING:
-                return self._base_ping
+                self._base_frame = self._base_ping.copy()
             case TestType.PERF:
-                return self._base_perf
+                self._base_frame = self._base_perf.copy()
             case TestType.ROUTE:
-                return self._base_route
+                self._base_frame = self._base_route.copy()
             case TestType.SPEED:
-                return self._base_speed_frame
+                self._base_frame = self._base_speed_frame.copy()
+        return self._base_frame
     
     @property
     def src_host(self):
@@ -117,22 +118,23 @@ class TestResult():
     @property
     def time_stamp(self):
         return self._base_frame["TS"]
-
-
+    
+    def __repr__(self):
+        return tabulate(self._base_frame, headers='keys', tablefmt='fancy_grid')
 
 @dataclass
 class ValidAddress(str):
     validated_ip = ""
 
     def __init__(self, input_address="127.0.0.1"):
-        if input_address == "127.0.0.1":
-            print("setting default IP to localhost")
+        if(input_address == "127.0.0.1" or input_address == "::1"):
             self.validated_ip = input_address
         else:
             try:
-                # TODO: add ipv6 support
                 _temp_target = ip_network(input_address)
-                if(_temp_target.prefixlen == 32): 
+                if(_temp_target.version == 4 and _temp_target.prefixlen == 32): 
+                    self.validated_ip = str(_temp_target.network_address)
+                elif(_temp_target.version == 6 and _temp_target.prefixlen == 128): 
                     self.validated_ip = str(_temp_target.network_address)
                 else:
                     _t = _temp_target.network_address + 1

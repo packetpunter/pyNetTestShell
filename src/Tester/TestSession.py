@@ -1,10 +1,7 @@
-from tabulate import tabulate
-
 import TestConfig
 from .perf import * 
 from .ping import *
 from .speed import *
-#from .mtr import *
 
 from TestUtils.Logging import TestHistory, TestType
 from TestUtils.TestObjects import TestResult
@@ -28,35 +25,35 @@ class Tester:
         self._ensure_targets()
         self._runner(self._TEST, self._TARGETS)
         
-    def _logprint(self, msg):
+    def _logprint(self, res: TestResult, test_type: str = None) -> None:
         ''' print to console and log '''
-        print(f"TestSession: {msg}")
-        #self._HISTORY.append(msg)
+        #print(f"TestSession: {r}")
+        self._HISTORY.append(res, test_type=test_type)
 
     def _runner(self, test, targets) -> None:
         ''' execute the runner for the task '''
         results = ""
         match test:
             case 'speed':
-                self._logprint("Begin speedtest")
                 results = speed_runner()
+                self._logprint(res=results, test_type=test)
+                results = []
             case 'route'|'routes'|'traceroute'|'mtr'|'trace':
-                self._logprint("Begin route testing")
                 results = traceroute_runner(targets)
                 for r in results:
-                    self._logprint(f"TEST {test}:: RESULTS \n{tabulate(r, headers='keys', tablefmt='fancy_grid')}")
+                    self._logprint(res=r, test_type=test)
+                    #self._logprint(f"TEST {test}:: RESULTS \n{tabulate(r, headers='keys', tablefmt='fancy_grid')}")
                 results = []
             case 'ping'|'pings':
-                self._logprint("Begin ping tests")
                 results = ping_runner(targets)
                 for r in results:
-                    self._logprint(f"TEST {test}:: RESULTS \n{tabulate(r, headers='keys', tablefmt='fancy_grid')}")
+                    self._logprint(res=r, test_type=test)
+                    #self._logprint(f"TEST {test}:: RESULTS \n{tabulate(r, headers='keys', tablefmt='fancy_grid')}")
                 results = []
             case 'perf'|'iperf':
-                self._logprint("Begin iperf test")
                 results = "iPerf3 test implemented in future release"
-        if results: 
-            self._logprint(f"TEST {test}:: RESULTS {results}")
+                self._logprint(res=results, test_type=test)
+                results = []
                 
     def _ensure_targets(self):
         if(len(self._TARGETS) == 0):

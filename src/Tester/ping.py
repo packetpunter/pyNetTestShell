@@ -15,7 +15,7 @@ def traceroute_runner(targetList):
 def _pinger(targetList, logging_enabled=True) -> list:
     result_list = []
     for host in targetList:
-        ping_result = ping(host, count=10, interval=1, privileged=True)
+        ping_result = ping(host, count=10, interval=1, privileged=False)
         result_list.append(tuple((host, ping_result)))
     results = parse_ping(result_list)
     return results
@@ -48,6 +48,7 @@ def _zparse_trace(host, hop_list) -> DataFrame:
     total_jitter = 0.0
     total_packet_loss = 0
     highest_rtt_hop = dict(address="", rtt=0.0)
+    first_hop = hop_list[0].address
     for theHop in hop_list: 
         # print("***Hop: {}".format(theHop))
         if theHop.avg_rtt > highest_rtt_hop["rtt"]:
@@ -56,7 +57,7 @@ def _zparse_trace(host, hop_list) -> DataFrame:
         total_rtt =+ theHop.avg_rtt
     
     trace_frame = trace_template.generate_frame()
-    trace_frame["SRC"] = "self"
+    trace_frame["SRC"] = f"self via {first_hop}"
     trace_frame["DST"] = host
     trace_frame["Route_AvgJitter"] = total_jitter / len(hop_list)
     trace_frame["Route_AvgRtt"] = total_rtt / len(hop_list)
