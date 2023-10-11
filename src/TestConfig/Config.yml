@@ -36,7 +36,7 @@ cli_script:
 
 logger:
   name: "Nike Log Storage Engine"
-  version: "0.0.1-alpha"
+  version: "0.0.1"
   slug: "nikelog"
   descripton: >
     Logging engine designed to store performance data,
