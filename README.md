@@ -18,10 +18,12 @@ This application has two ways to interface with it. There is an interactive shel
 
 #### Interactive Shell
 *NOTE:* This requires Sudo privileges on Linux/MacOS, but not Windows.
-
+Both of the following work to run the shell:
 ```bash
 sudo python3 -m TestShell
-
+``` 
+```bash
+sudo TestShell
 ```
 ##### Sample Output
 ```bash
