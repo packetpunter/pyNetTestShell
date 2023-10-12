@@ -120,4 +120,9 @@ class shellCmdInteractive(Cmd):
         for i in range(self._sleep_interval):
             sleep(1)
 
+def main():
+    cmdz = shellCmdInteractive()
+    cmdz.cmdloop()
 
+if __name__ == "__main__":
+    main()

@@ -44,4 +44,4 @@ dependencies = [
 "Homepage" = "https://github.com/packetpunter/pyNetTestShell"
 
 [project.scripts]
-TestShell = "TestShell.shellCmd:shellCmdInteractive.cmdloop"
+TestShell = "TestShell.shellCmd:main"
