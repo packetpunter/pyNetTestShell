@@ -1,7 +1,7 @@
 ---
 shell:
   name: "Network Tester Interactive"
-  version: "2.2.1"
+  version: "2.2.2"
   slug: "net_test"
   description: >
     A tool to begin testing your network, with
@@ -48,5 +48,5 @@ default:
     - 4.4.4.4
     - 8.8.8.8
     - 3.us.pool.ntp.org
-  base_path: "network-testing"
+  base_path: "~/network-testing"
   sleep_interval_seconds: 60

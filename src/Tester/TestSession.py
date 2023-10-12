@@ -20,6 +20,7 @@ class Tester:
             self._TARGETS = targets
         self._CONFIG = TestConfig.CONFIG
         self._HISTORY = TestHistory()
+        print(f"Using log file {self._HISTORY._logfile}")
     
     def run(self):
         self._ensure_targets()

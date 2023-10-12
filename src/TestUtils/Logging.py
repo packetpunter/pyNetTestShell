@@ -13,11 +13,12 @@ class TestHistory:
         self._now = datetime.now()
         self._fday = self._now.strftime("%Y/%m/%d")
         self._ftime = self._now.strftime("%H:%M")
-        self._fpath = self._basepath + "/" + self._fday + "/"
+        self._fpath = "~/" + self._basepath + "/" + self._fday + "/"
         os.makedirs(self._fpath, exist_ok=True)
         self._logfile = self._fpath + "/log.txt"
+    
     def __get_path(self) -> str:
-        return self._basepath
+        return self._logfile
     
     #TODO: implement storage of results as pandas dataframes
     #def append_raw()
