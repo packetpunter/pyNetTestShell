@@ -3,6 +3,7 @@
 ## 2.2.2 bug fixes
 ### Fixed
 - The program can be called by "python -m TestShell" now or just "TestShell".
+- The program logs to ~/network-testing per the README
 
 ## 2.2.1 stable version
 - Finalized logging to use pandas Dataframes and store them

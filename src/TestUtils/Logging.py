@@ -3,6 +3,7 @@ from datetime import datetime
 import TestConfig
 from TestUtils.TestObjects import TestType, TestResult
 from tabulate import tabulate
+from pathlib import Path
 
 class TestHistory:
     ''' Top level python object to manage the\n'''\
@@ -13,9 +14,9 @@ class TestHistory:
         self._now = datetime.now()
         self._fday = self._now.strftime("%Y/%m/%d")
         self._ftime = self._now.strftime("%H:%M")
-        self._fpath = self._basepath + "/" + self._fday + "/"
+        self._fpath = Path.home().as_posix() + "/" + self._basepath + "/" + self._fday + "/"
         os.makedirs(self._fpath, exist_ok=True)
-        self._logfile = self._fpath + "/log.txt"
+        self._logfile = self._fpath + "log.txt"
     
     def __get_path(self) -> str:
         return self._logfile
