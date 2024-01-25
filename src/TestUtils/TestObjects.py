@@ -122,6 +122,9 @@ class TestResult():
     def __repr__(self):
         return tabulate(self._base_frame, headers='keys', tablefmt='fancy_grid')
 
+    def to_csv(self):
+        return self._base_frame.to_csv()
+
 @dataclass
 class ValidAddress(str):
     validated_ip = ""

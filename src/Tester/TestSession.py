@@ -7,6 +7,7 @@ from TestUtils.Logging import TestHistory, TestType
 from TestUtils.TestObjects import TestResult
 from TestUtils.TestObjects import ValidAddress
 
+
 class Tester:
     ''' Top level python object to create the \n'''\
     '''  container for the testing data as it \n'''\
@@ -20,7 +21,6 @@ class Tester:
             self._TARGETS = targets
         self._CONFIG = TestConfig.CONFIG
         self._HISTORY = TestHistory()
-        print(f"Using log file {self._HISTORY._logfile}")
     
     def run(self):
         self._ensure_targets()
@@ -28,7 +28,7 @@ class Tester:
         
     def _logprint(self, res: TestResult, test_type: str = None) -> None:
         ''' print to console and log '''
-        #print(f"TestSession: {r}")
+        #print(f"TestSession: {res.to_csv()}")
         self._HISTORY.append(res, test_type=test_type)
 
     def _runner(self, test, targets) -> None:
