@@ -10,7 +10,7 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.11"
-version = "2.2.2"
+version = "2.2.21"
 keywords = [ "traceroute", "ping", "python3", "network-testing"]
 license = {file = "LICENSE"}
 classifiers = [

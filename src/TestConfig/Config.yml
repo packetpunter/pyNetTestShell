@@ -1,7 +1,7 @@
 ---
 shell:
   name: "Network Tester Interactive"
-  version: "2.2.2"
+  version: "2.2.21"
   slug: "net_test"
   description: >
     A tool to begin testing your network, with
@@ -13,7 +13,7 @@ shell:
 
 tester:
   name: "NetworkTesterBackend"
-  version: "2.2.0"
+  version: "2.2.1"
   slug: "tester"
   description: >
     A backend library to enable testing of the network.\n
@@ -36,7 +36,7 @@ cli_script:
 
 logger:
   name: "Nike Log Storage Engine"
-  version: "0.0.1"
+  version: "0.0.2"
   slug: "nikelog"
   descripton: >
     Logging engine designed to store performance data,

@@ -3,9 +3,9 @@ from .perf import *
 from .ping import *
 from .speed import *
 
-from TestUtils.Logging import TestHistory, TestType
-from TestUtils.TestObjects import TestResult
-from TestUtils.TestObjects import ValidAddress
+from TestUtils.Logging import TestHistory
+from TestUtils.TestObjects import TestResult, ValidAddress, TestType
+
 
 class Tester:
     ''' Top level python object to create the \n'''\

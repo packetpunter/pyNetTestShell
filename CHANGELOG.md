@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.2.21 bug fixes
+## Fixed
+- The program logs to /network-testing, and now sets the files and directory to 777 unix permissions
+
+## Changed
+- The program must be run as root for traceroute
+
 ## 2.2.2 bug fixes
 ### Fixed
 - The program can be called by "python -m TestShell" now or just "TestShell".

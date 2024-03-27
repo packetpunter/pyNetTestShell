@@ -5,9 +5,11 @@ An interactive python shell to test the network using external commands as well 
 None - this is pure Python3, thanks to the likes of the tabulate project and the icmplib project.
 
 ## Behavior
-The app is interactive, and upon launch, creates a new logfile. 
+The app is interactive, and upon launch, creates a new logfile. It **must** be run as root.
 
-The logfile is located in ```$(CWD)/network-testing/$YEAR/$MONTH/$DAY``` and the file is named according to data in ```Config.py```, using the timestamp for the file name.
+The logfile is located in ```/network-testing/$YEAR/$MONTH/$DAY``` and the file is named according to data in ```Config.py```, using the timestamp for the file name.
+
+The log directory and files are 777 owned by root.
 
 Once in, you have a shell where you can run pings, traceroutes, speedtests with logging to disk and some analysis.
 

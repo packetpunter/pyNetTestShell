@@ -14,7 +14,9 @@ clean:
 	@rm -rf $(shell find . -name '*__pycache__*')
 	@rm -rf $(shell find . -name '*.egg*')
 build:
-	python3 -m build
+	python3.11 -m build
 
 dev-install:
 	pip install -e .
+install:
+	sudo python3.11 -m pip install ./dist/pyNetTestShell-2.2.21-py3-none-any.whl --force-reinstall

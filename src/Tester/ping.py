@@ -22,11 +22,14 @@ def _pinger(targetList, logging_enabled=True) -> list:
 
 def _tracerouter(targetList, logging_enabled=True):
     results_list = []
-    for host in targetList:
-        hop_list = traceroute(host)
-        parsed_results = _zparse_trace(host, hop_list)
-        results_list.append(parsed_results)
-    return results_list
+    try:
+        for host in targetList:
+            hop_list = traceroute(host)
+            parsed_results = _zparse_trace(host, hop_list)
+            results_list.append(parsed_results)
+        return results_list
+    except SocketPermissionError:
+        print("Unable to run traceroute without running this as root. Please re-run with sudo.")
 
 def parse_ping(ping_result_list) -> list:
     result_list = []
