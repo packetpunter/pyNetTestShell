@@ -29,7 +29,7 @@ class TestResult():
             "TR_Speed_Down": -1.0,
             "TR_Speed_Up": -1.0,
             "TR_Speed_Latency": -1.0,
-            "TR_Speed_URL": "none"
+            "TR_Speed_URL": "none",
             "TR_Ping_Avg": 0.0,
             "TR_Ping_Max": 0.0,
             "TR_Ping_Min": 0.0,
